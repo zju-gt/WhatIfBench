@@ -37,6 +37,11 @@ RELATION_LABELS = [
 ]
 
 SECTION_HEADERS = ("EDUs:", "RST ANALYSIS:", "TREE STRUCTURE:")
+PARSER_EXTRA_BODY = {
+    "reasoning": {"effort": "none", "exclude": True},
+    "thinking": {"type": "disabled"},
+}
+PARSER_MAX_TOKENS = 4096
 
 
 def build_parser_messages(answer: str) -> list[dict[str, str]]:
@@ -69,6 +74,27 @@ def build_parser_messages(answer: str) -> list[dict[str, str]]:
 
 def _normalize_relation_label(label: str) -> str:
     return re.sub(r"[^A-Z0-9]+", "_", label.strip().upper()).strip("_")
+
+
+def _normalize_edu_ref(ref: str) -> str:
+    stripped = ref.strip()
+    match = re.fullmatch(r"EDU\s*(\d+)(?:\s*-\s*(\d+))?", stripped, flags=re.IGNORECASE)
+    if not match:
+        return stripped.upper()
+    start = match.group(1)
+    end = match.group(2)
+    return f"EDU{start}" if end is None else f"EDU{start}-{end}"
+
+
+def _edu_span_bounds(edu_ref: str) -> tuple[int, int]:
+    match = re.fullmatch(r"EDU(\d+)(?:-(\d+))?", _normalize_edu_ref(edu_ref))
+    if not match:
+        return (0, 0)
+    start = int(match.group(1))
+    end = int(match.group(2) or match.group(1))
+    if end < start:
+        start, end = end, start
+    return (start, end)
 
 
 def _extract_section(raw: str, header: str) -> str:
@@ -111,13 +137,18 @@ def parse_edus_block(raw: str) -> list[dict[str, str]]:
 def parse_relations_block(raw: str) -> list[dict[str, str]]:
     block = _extract_section(raw, "RST ANALYSIS:") or raw
     relations: list[dict[str, str]] = []
+    edu_ref = r"EDU\s*\d+(?:\s*-\s*\d+)?"
     patterns = [
         re.compile(
-            r"RELATION\(\s*(EDU\d+)\s*,\s*(EDU\d+)\s*\)\s*:\s*([A-Za-z _/-]+?)(?:\s*\[\s*(SN|NS|NN)\s*\])?$",
+            rf"RELATION\(\s*({edu_ref})\s*,\s*({edu_ref})\s*\)\s*:\s*([A-Za-z _/-]+?)(?:\s*\[\s*(SN|NS|NN)\s*\])?$",
             flags=re.IGNORECASE,
         ),
         re.compile(
-            r"(EDU\d+)\s*->\s*(EDU\d+)\s*:\s*([A-Za-z _/-]+?)(?:\s*\[\s*(SN|NS|NN)\s*\])?$",
+            rf"(EDU\d+(?:-\d+)?)\s*->\s*(EDU\d+(?:-\d+)?)\s*:\s*([A-Za-z _/-]+?)(?:\s*\[\s*(SN|NS|NN)\s*\])?$",
+            flags=re.IGNORECASE,
+        ),
+        re.compile(
+            rf"([A-Za-z _/-]+)\(\s*({edu_ref})\s*,\s*({edu_ref})\s*\)\s*:\s*([A-Za-z _/-]+?)(?:\s*\[\s*(SN|NS|NN)\s*\])?$",
             flags=re.IGNORECASE,
         ),
     ]
@@ -129,12 +160,22 @@ def parse_relations_block(raw: str) -> list[dict[str, str]]:
             match = pattern.match(stripped)
             if not match:
                 continue
+            if pattern is patterns[2]:
+                source_ref = match.group(2)
+                target_ref = match.group(3)
+                relation_label = match.group(4) or match.group(1)
+                nuclearity = match.group(5)
+            else:
+                source_ref = match.group(1)
+                target_ref = match.group(2)
+                relation_label = match.group(3)
+                nuclearity = match.group(4)
             relations.append(
                 {
-                    "source": match.group(1).upper(),
-                    "target": match.group(2).upper(),
-                    "type": _normalize_relation_label(match.group(3)),
-                    "nuclearity": (match.group(4) or "").upper() or "SN",
+                    "source": _normalize_edu_ref(source_ref),
+                    "target": _normalize_edu_ref(target_ref),
+                    "type": _normalize_relation_label(relation_label),
+                    "nuclearity": (nuclearity or "").upper() or "SN",
                 }
             )
             break
@@ -147,8 +188,8 @@ def parse_tree_lines(raw: str) -> list[str]:
 
 
 def _edu_index(edu_id: str) -> int:
-    match = re.search(r"(\d+)$", edu_id)
-    return int(match.group(1)) if match else 0
+    start, _ = _edu_span_bounds(edu_id)
+    return start
 
 
 def _sort_edu_pair(a: str, b: str) -> tuple[str, str]:
@@ -159,9 +200,14 @@ def _build_tree_nodes_from_relations(relations: list[dict[str, str]]) -> list[di
     nodes: list[dict[str, Any]] = []
     for index, relation in enumerate(relations, start=1):
         left_child, right_child = _sort_edu_pair(relation["source"], relation["target"])
+        left_start, left_end = _edu_span_bounds(left_child)
+        right_start, right_end = _edu_span_bounds(right_child)
+        span_start = min(left_start, right_start)
+        span_end = max(left_end, right_end)
         node: dict[str, Any] = {
             "id": f"node_{index}",
-            "span": [_edu_index(left_child), _edu_index(right_child)],
+            "span": [span_start, span_end],
+            "span_ref": f"EDU{span_start}" if span_start == span_end else f"EDU{span_start}-{span_end}",
             "relation": relation["type"],
             "nuclearity": relation["nuclearity"],
             "left_child": left_child,
@@ -194,6 +240,10 @@ def _split_answer_into_edus(answer: str) -> list[dict[str, str]]:
 
 
 def heuristic_rst_record(answer: str, error: str | None = None) -> dict[str, Any]:
+    return heuristic_rst_record_with_raw(answer, error=error, raw_output="")
+
+
+def heuristic_rst_record_with_raw(answer: str, error: str | None = None, raw_output: str = "") -> dict[str, Any]:
     edus = _split_answer_into_edus(answer)
     relations = []
     for left, right in zip(edus, edus[1:]):
@@ -206,7 +256,7 @@ def heuristic_rst_record(answer: str, error: str | None = None) -> dict[str, Any
             }
         )
     return {
-        "raw_output": "",
+        "raw_output": raw_output,
         "edus": edus,
         "relations": relations,
         "tree": {
@@ -231,12 +281,14 @@ def parse_rst_record(
     parser_model: str,
     answer: str,
 ) -> dict[str, Any]:
+    raw = ""
     try:
         raw = client.chat_completion(
             model=parser_model,
             messages=build_parser_messages(answer),
             temperature=0.0,
-            max_tokens=1024,
+            max_tokens=PARSER_MAX_TOKENS,
+            extra_body=PARSER_EXTRA_BODY,
         )
         if not raw:
             raise ValueError("Empty parser output")
@@ -255,17 +307,31 @@ def parse_rst_record(
             "error": recovery_error,
         }
     except Exception as exc:
-        return heuristic_rst_record(answer, str(exc))
+        return heuristic_rst_record_with_raw(answer, error=str(exc), raw_output=raw)
 
 
 def _resolve_promoted(ref: str, edu_ids: set[str], node_map: dict[str, dict[str, Any]], memo: dict[str, list[str]]) -> list[str]:
     if ref in memo:
         return memo[ref]
+    normalized_ref = _normalize_edu_ref(ref)
+    if normalized_ref in memo:
+        return memo[normalized_ref]
+
+    if normalized_ref in edu_ids:
+        memo[normalized_ref] = [normalized_ref]
+        return memo[normalized_ref]
+
     if ref in edu_ids:
         memo[ref] = [ref]
         return memo[ref]
-    node = node_map.get(ref)
+    node = node_map.get(normalized_ref) or node_map.get(ref)
     if not node:
+        start, end = _edu_span_bounds(normalized_ref)
+        if start and end and end > start:
+            expanded = [f"EDU{i}" for i in range(start, end + 1) if f"EDU{i}" in edu_ids]
+            if expanded:
+                memo[normalized_ref] = expanded
+                return memo[normalized_ref]
         memo[ref] = []
         return memo[ref]
 
@@ -293,7 +359,14 @@ def project_rst_to_graph(rst_record: dict[str, Any]) -> dict[str, Any]:
     if not tree_nodes and rst_record.get("relations"):
         tree_nodes = _build_tree_nodes_from_relations(list(rst_record["relations"]))
 
-    node_map = {node["id"]: node for node in tree_nodes if "id" in node}
+    node_map: dict[str, dict[str, Any]] = {}
+    for node in tree_nodes:
+        node_id = node.get("id")
+        span_ref = node.get("span_ref")
+        if isinstance(node_id, str):
+            node_map[node_id] = node
+        if isinstance(span_ref, str):
+            node_map[span_ref] = node
     promoted_cache: dict[str, list[str]] = {}
     edges: list[dict[str, str]] = []
     seen: set[tuple[str, str, str]] = set()

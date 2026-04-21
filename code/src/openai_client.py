@@ -38,6 +38,7 @@ class OpenAICompatibleClient:
         max_tokens: int = 1024,
         response_format: dict[str, Any] | None = None,
         extra_headers: dict[str, str] | None = None,
+        extra_body: dict[str, Any] | None = None,
     ) -> str:
         payload: dict[str, Any] = {
             "model": model,
@@ -47,6 +48,8 @@ class OpenAICompatibleClient:
         }
         if response_format is not None:
             payload["response_format"] = response_format
+        if extra_body:
+            payload.update(extra_body)
 
         headers = {
             "Authorization": f"Bearer {self.api_key}",

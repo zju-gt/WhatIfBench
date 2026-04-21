@@ -43,3 +43,35 @@ def test_chat_completion_reports_finish_reason_on_empty_content(monkeypatch):
             model="judge-model",
             messages=[{"role": "user", "content": "hello"}],
         )
+
+
+def test_chat_completion_merges_extra_body_fields(monkeypatch):
+    seen: dict[str, dict] = {}
+    payload = {
+        "choices": [
+            {
+                "message": {"content": "ok"},
+                "finish_reason": "stop",
+            }
+        ]
+    }
+
+    def fake_urlopen(request, timeout=None):
+        seen["body"] = json.loads(request.data.decode("utf-8"))
+        return FakeHTTPResponse(payload)
+
+    monkeypatch.setattr(urllib.request, "urlopen", fake_urlopen)
+    client = OpenAICompatibleClient(api_key="test", base_url="https://example.com", max_retries=0)
+
+    result = client.chat_completion(
+        model="judge-model",
+        messages=[{"role": "user", "content": "hello"}],
+        extra_body={
+            "reasoning": {"effort": "none", "exclude": True},
+            "thinking": {"type": "disabled"},
+        },
+    )
+
+    assert result == "ok"
+    assert seen["body"]["reasoning"] == {"effort": "none", "exclude": True}
+    assert seen["body"]["thinking"] == {"type": "disabled"}
