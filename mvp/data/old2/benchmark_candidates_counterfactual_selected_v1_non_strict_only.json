@@ -1,0 +1,826 @@
+[
+  {
+    "id": 3,
+    "canonical_id": "canon_0010",
+    "question": "我被困在一个外星星球上。没有时钟如何测量地球年？我刚刚通过星际之门被推到一个我不知道的星球上。我被告知大门将在整整一个地球年后再次打开。我没带任何东西；我连手表都没有。我怎么知道哪一天可以回家？我可以计算天数，但首先，我需要确定这个星球一天的绝对长度。我怎样才能做到这一点？我不能只数秒——在几个小时内太不准确了。我可以制作一个钟摆用作时钟，但除非我知道这里的重力值，否则这是没有用的。我不知道气压或氧气百分比，只知道我能够呼吸。该场景应该被认为是人为的，而不是被挑选出来的。我认识到在这种情况下实际尝试测量时间可能不值得。问题是，在没有参考的情况下，你能精确测量时间吗？我问这个问题是因为我想知道是否存在任何物理过程（核衰变除外），其速率独立于（或至少高度不敏感）",
+    "domain": "STEM",
+    "answer_type": "open",
+    "human_answers": [
+      "Use John Philip Sousa... (I like \"Stars & Stripes Forever\" personally, but do ignore the rallentando going into the third repeat of the first strain!) If you've any exposure to him you can probably hit 120 beats per minute to within +/- 10; if you've any mu...",
+      "There is a bit of confusion about my answer. I'm updating the answer with clarifications and additional information.",
+      "Talk fast (literally) If there's a stargate, there is a good chance that there is a civilisation also. An Earth year gives you time to explore before you return and set up camp next to the stargate.",
+      "You can only go forward through a stargate, so you should hide and camp near it. When you hear noise, either Earth is dialing you to send someone that dials back, or the stargate is programmed to dial Earth automatically within a year.",
+      "Get some help from the locals to learn c This is a little bit of a stretch, but can you find some friendly advanced aliens who can measure the speed of light to at least the same level as we could in 1878? And do you remember the speed of light to an accura..."
+    ],
+    "is_counterfactual": false
+  },
+  {
+    "id": 4,
+    "canonical_id": "canon_0013",
+    "question": "俄罗斯套娃 - 它们如何繁殖？显示解剖俄罗斯娃娃的警告图片 我的理论 我相信俄罗斯娃娃是无性繁殖的。他们出生时就怀孕了。出生时，外面的娃娃就死了。现在外面的娃娃会长大，直到达到完整尺寸，然后出生并死亡。出生过程很简单——外面的娃娃只是围绕着中间分成两半。一个新的内在娃娃同时形成。问题 我的理论意味着人口只能保持不变或减少。事实上，意外事件意味着种群数量将会减少，直至物种灭绝。问题 我怎样才能解决这个问题并允许人口增加，同时仍然尽可能保留我的理论？",
+    "domain": "STEM",
+    "answer_type": "open",
+    "human_answers": [
+      "Actually, there is an organism on earth that is vaguely similar to the Russian dolls that you describe. The volvox: Individual volvox cells, a kind of freshwater algae, reproduce in the conventional way (more or less), however, they also collect into spheri..."
+    ],
+    "is_counterfactual": false
+  },
+  {
+    "id": 9,
+    "canonical_id": "canon_0021",
+    "question": "是否有足够的能量将当前全部人类移出地球？",
+    "domain": "STEM",
+    "answer_type": "closed",
+    "human_answers": [
+      "There are a bunch of science fiction movies where, because of pollution, overpopulation, or nuclear war, humanity abandons Earth. But lifting people into space is hard.",
+      "There are a bunch of science fiction movies where, because of pollution, overpopulation, or nuclear war, humanity abandons Earth. But lifting people into space is hard."
+    ],
+    "is_counterfactual": false
+  },
+  {
+    "id": 12,
+    "canonical_id": "canon_0024",
+    "question": "如果你走到外面，仰面躺下，张着嘴，你要等多久才会有鸟在里面拉屎？",
+    "domain": "STEM",
+    "answer_type": "open",
+    "human_answers": [
+      "\\[\\text{Period}=\\frac{1}{\\text{Frequency}}=\\frac{1}{\\frac{300 \\text{ billion birds}}{4\\pi\\times\\text{Earth radius}^2}\\times 1\\frac{\\frac{\\text{poop}}{\\text{bird}}}{\\text{hour}}\\times16\\frac{\\text{hours}}{\\text{day}}\\times 1 \\frac{\\text{mouth}}{\\text{poop}}\\...",
+      "Answer: \\[\\text{Period}=\\frac{1}{\\text{Frequency}}=\\frac{1}{\\frac{300 \\text{ billion birds}}{4\\pi\\times\\text{Earth radius}^2}\\times 1\\frac{\\frac{\\text{poop}}{\\text{bird}}}{\\text{hour}}\\times16\\frac{\\text{hours}}{\\text{day}}\\times 1 \\frac{\\text{mouth}}{\\text..."
+    ],
+    "is_counterfactual": false
+  },
+  {
+    "id": 17,
+    "canonical_id": "canon_0029",
+    "question": "雷雨天呆在泳池里到底有多危险？",
+    "domain": "STEM",
+    "answer_type": "open",
+    "human_answers": [
+      "Before we go any further, I want to emphasize something: I am not an authority on lightning safety. I am a guy who draws pictures on the internet.",
+      "Before we go any further, I want to emphasize something: I am not an authority on lightning safety. I am a guy who draws pictures on the internet."
+    ],
+    "is_counterfactual": false
+  },
+  {
+    "id": 19,
+    "canonical_id": "canon_0031",
+    "question": "在《世界末日》中，美国宇航局的一名人员评论说，向小行星发射激光的计划就像“向货运列车发射BB枪”。仅使用 b.b. 怎样才能阻止失控的货运列车？枪？",
+    "domain": "STEM",
+    "answer_type": "open",
+    "human_answers": [
+      "First of all, for the record, shooting asteroids with lasers is a great way to deflect them. Stopping a train with a BB gun might be harder.",
+      "First of all, for the record, shooting asteroids with lasers is a great (http://proceedings.aip.org/resource/2/apcpcs/664/1/509_1?bypassSSO=1) way to deflect them. Stopping a train with a BB gun might be harder."
+    ],
+    "is_counterfactual": false
+  },
+  {
+    "id": 22,
+    "canonical_id": "canon_0072",
+    "question": "中国有没有考虑过拼音文字系统？我惊讶地了解到以下有关日语和韩语的信息：日语在其语言中使用了大量汉字，并且没有语音系统，直到公元 800 年左右他们创造了第一个假名。 （他们仍然使用大量汉字，但关键是他们最初没有语音系统，然后创建了一个。）韩国人在他们的语言中也使用了很多汉字，直到1443年左右他们创造了韩文时才没有语音系统。 （我不确定他们是否仍然使用大量汉字，但要点与日本相同。）所以你可以看到这是如何提出我的问题的。中国有没有考虑过拼音文字系统？换句话说，是否有任何皇帝、学者、宫廷太监或其他官员，或者只是儒家或道家之类的某个学派的智者……写下一些关于考虑拼音文字系统的想法？他们中是否有人至少注意到日本和韩国的做法并明确拒绝？最关键的是，他们是否说明了拒绝的理由？我感兴趣的时期是前现代中国。 换句话说，从远古时代到 1912 年。编辑：分析很有趣，但是",
+    "domain": "HASS",
+    "answer_type": "closed",
+    "human_answers": [
+      "There were at least a couple of alphabetic script attempts developed for Chinese. However, none of them really caught on.",
+      "Yes, but neither by the Chinese nor only for Chinese. Kublai Khan ordered the Tibetan Sakya trizin Phagpa to create a universal alphabet to be used by the languages of his empire.",
+      "TLDR: Phonetic scripts won't work because of how the Chinese languages are structured. So it never really came up before Europeans arrived.",
+      "The Manchu alphabet The Qing dynasty (ruling China from 1644-1912) was founded by a clan of Manchuria, who spoke the Manchu language, written in the Manchu alphabet. Prior to the Qing dynasty defeating the Ming dynasty, Manchu leader Nurhaci > decided to co..."
+    ],
+    "is_counterfactual": false
+  },
+  {
+    "id": 23,
+    "canonical_id": "canon_0073",
+    "question": "1941 年 12 月 7 日，日本是否可以在突然袭击中瞄准巴拿马运河而不是珍珠港？这个问题来自一个稍微相关的问题。第二次世界大战时，美国大部分工业都位于东海岸，包括所有航母和战列舰的造船业。如果巴拿马运河沉没，将大大减少美国海军在太平洋的后勤保障。所以我想知道，日本海军是否有能力在突然袭击中摧毁它，比如1941年12月7日？到目前为止我所知道的： - 巴拿马运河每条航道有 6 个水闸。这些锁有混凝土墙，但有空心钢门，根据这部纪录片：https://www.youtube.com/watch?v=d-CaBIKTl4M，在 1:11:00 你可以看到它们是一个空心框架。一枚炸弹或鱼雷可能会在上面炸出一个洞，但可能不足以立即耗尽船闸的水。 - 日本俯冲轰炸机接受过训练，他们在二战早期（珊瑚海、中途岛）遭受的许多航母打击就证明了这一点。注意，我说的是打击，不一定是杀戮。我回顾了这两场战斗，很多次，美国航母都被击中了，但都幸存了（当时美国航母似乎比日本航母坚强得多）。 我只是想指出日本俯冲轰炸机似乎训练有素且准确性良好。 - 编辑：潘",
+    "domain": "HASS",
+    "answer_type": "open",
+    "human_answers": [
+      "> So I want to know, did the Japanese Navy have the ability to destroy it in a surprise attack, let's say on 1941 Dec 7? I'm asking if the Japanese Navy had the ability.",
+      "The Canal is 8400 miles from Tokyo, compared to 4000 miles for Pearl Harbour. The Japanese carriers are stated of having a range of 10,000 miles at a cruising speed of about 16 knots, but remember that drag varies as the square of speed.",
+      "Destroying those locks is going to be harder than you think. They are very large, at 110 feet x 1,050 feet, and the lock gates have to have been built to stand up to accidental collisions with large ships (at low speed, admittedly)."
+    ],
+    "is_counterfactual": false
+  },
+  {
+    "id": 24,
+    "canonical_id": "canon_0082",
+    "question": "18世纪盔甲逐渐被淘汰，为什么射箭没有卷土重来？即使我们考虑到训练一个人使用弓比训练火枪要繁琐得多，为什么强弩没有卷土重来呢？据报道，其有效射程为 300m，仍然比 18 世纪的滑膛步枪好得多，而且可能也更准确。一支由14世纪强弩手组成的军队似乎比一支燧发枪手组成的军队有更多的战术选择，那么为什么十字弓没有卷土重来呢？",
+    "domain": "HASS",
+    "answer_type": "open",
+    "human_answers": [
+      "Yes, a trained archer can probably put more effective shots on an unarmored target than a trained musketman of the 18th century. The problem is that word trained.",
+      "One often missed factor is that arrows are delicate and require skilled fletchers to make them. The English invasion of France under Edward IV in 1475 required two years lead time producing enough arrows to supply his troops on campaign.",
+      "There have already been some good explanations, regarding relative ease of use for muskets, as well as less training required to use, but I have not seen two constants of campaigning considered: Rain and Disease. Gunpowder and bowstrings both need to be kep...",
+      "There's a lot of very good answers already; but I'd like to add on to what @Schwern has said from a Japanese perspective. When the musket was introduced in Japan in the 16th century, it quickly overtook archery in terms of importance.",
+      "Schwern had a lot of very good points, but there are other factors as well. - siege warfare."
+    ],
+    "is_counterfactual": false
+  },
+  {
+    "id": 25,
+    "canonical_id": "canon_0083",
+    "question": "波兰为何能幸免于黑死病？黑死病维基百科页面的特色图片是一张 gif，显示黑死病在整个欧洲的传播。有一些地方瘟疫从未传播到，包括米兰周边地区。但最值得注意的是，整个波兰王国都幸免于难，尽管几乎所有其他地区都受到了感染。维基百科页面本身只说了以下内容： > 欧洲部分地区幸免于难，包括波兰王国、巴斯克地区的大部分地区以及比利时和荷兰的偏远地区。但它从未解释为什么波兰会幸免。波兰只是运气好，还是另有原因？",
+    "domain": "HASS",
+    "answer_type": "open",
+    "human_answers": [
+      "Poland wasn't actually \"spared\", it was merely less affected than the rest of Europe. That graphic is incorrect (or rather, incomplete), since a substantial number of both Poland and Milan's population did in fact die of the plague.",
+      "There are three types of plague, Pneumonic, Bubonic, and Septicemic all of which are caused by the bacterium Yersinia pestis. People infected by fleas get the bubonic form of the plague.",
+      "ANOTHER EXPLANATION REGARDING POLAND IS THAT IT HAD A LOT OF JEWS, PARTICULARLY IN URBAN SETTINGS; NOW, WHY WERE Jews Less Affected? > And even if Jews died at a lesser rate, it can be attributed to the sanitary practices Jewish law."
+    ],
+    "is_counterfactual": false
+  },
+  {
+    "id": 26,
+    "canonical_id": "canon_0084",
+    "question": "为什么中国能够统一而欧洲却不能？如果你看一下中国历代地图，你通常会发现（大约从汉朝开始）代表中国的巨大物体。另一方面，如果你看一下欧洲地图，你通常会看到大量的国家。为什么中国能够统一，而欧洲却不能？",
+    "domain": "HASS",
+    "answer_type": "open",
+    "human_answers": [
+      "China (or at least its core) had a central, unifying culture built around philosophers such as Confucius and Lao-tse that was attractive to people over a wide land area. Also, the Chinese written language was developed from pictograms that represented \"word...",
+      "In Rome and China: Comparative Perspectives on Ancient World Empires, the first chapter by Walter Scheidel, \"From the 'Great Convergence' to the 'First Great Divergence'\", makes the case that the Chinese style of government focused on centralising power whi...",
+      "I think that stems from both geographic and cultural factors. At first it is almost like Jim Thio said, only that it may not exactly be mountains.",
+      "It is a wrong assumption that Europe was never unified politically. First, in ancient times the cultural development of different European peoples was very diverse.",
+      "To begin with, the statistics show China was under unified rule 44% of its time. The number for Europe is 18%."
+    ],
+    "is_counterfactual": false
+  },
+  {
+    "id": 27,
+    "canonical_id": "canon_0085",
+    "question": "第二次世界大战期间日本帝国为何不进攻苏联？日本和苏联在满洲有共同边界，德国对苏联的入侵极大地削弱了苏联。鉴于日本击败苏联的优势（更不用说西伯利亚的资源了），而且日本驻有大量关东军基本上无所事事，为什么日本不进攻呢？",
+    "domain": "HASS",
+    "answer_type": "open",
+    "human_answers": [
+      "We have to delve into two spheres to address this question, the political and the military. Militarily, the Japanese fought a series of border skirmishes with the Soviet Union at Khalkhin Gol (located along the Manchurian - Mongolian border, Mongolia then b...",
+      "Japan was interested in extending its influence in Asia and for that it had to confront either USSR or USA. While I don't think that the exact reason for choosing USA is known, Japan was at a clear disadvantage when battling USSR: while the Soviet Union had...",
+      "In August 1939, while Japan and the USSR were skirmishing, Germany and the USSR signed a Non-Aggression Pact that allowed Stalin to put some more focus on Japan (among other things). By early 1941, Japan decided it was time to focus on securing its oil supp..."
+    ],
+    "is_counterfactual": false
+  },
+  {
+    "id": 28,
+    "canonical_id": "canon_0087",
+    "question": "为什么古老的防御工事形状像星星而不是圆形？哥本哈根、腓特烈西亚和阿卡的防御工事呈星形。 （哥本哈根防御工事如下图所示。）为什么不把防御工事或防御工事做成纯粹的正方形或圆形呢？",
+    "domain": "HASS",
+    "answer_type": "open",
+    "human_answers": [
+      "Star forts or bastion forts are designed to enable enfilade (or flanking) fire: shooting on the line of attackers from the side, significantly increasing firing efficiency of the defender. Flanking fire allows guns placed in the side wall of the bastion (pr...",
+      "Imagine that you are defending a fort with old-fashioned round bastions in the Middle Ages. Your walls are high, but once the enemy comes close and starts scaling the walls, very few of your defenders can engage them.",
+      "These outcroppings are called Bastions and they became common when muskets and cannons became common in European warfare. The problem with a square or circle forts is that when the enemy has reached the wall, they are in your dead zone."
+    ],
+    "is_counterfactual": false
+  },
+  {
+    "id": 29,
+    "canonical_id": "canon_0091",
+    "question": "二战时德国为何不封锁直布罗陀海峡？直布罗陀海峡最窄处宽约14公里。二战时德国为何不封锁？在我看来，只有少数潜艇和驱逐舰可以完成这项工作。难道德国海军（Kriegsmarine）没有能力封锁它吗？海底狼群至少在那个咽喉要道捕猎过吗？封锁将适用于美国/英国/苏联船只，但当然允许西班牙和其他中立国家。想必这对西班牙来说不会是一个政治问题。注意：我不是在谈论英国控制下的直布罗陀要塞。那是另一回事了。",
+    "domain": "HASS",
+    "answer_type": "open",
+    "human_answers": [
+      "> ...but if the Strait is guarded such that they can't get them without braving an enfilading strafe of torpedoes, then it wouldn't do much good even if they knew where they are. From this comment by the OP, and others like it, it seems they don't appreciat...",
+      "Gibraltar during the war had a quite formidable British naval presence (Force H), an airfield, and significant coastal gun emplacements easily capable of covering the entire strait. > The primary batteries were a set of twin 9.2\" naval guns guns at the sout...",
+      "While you are at it why not blockade the port of London? Isn't that a better target?",
+      "I'm not a historian nor a scholar of sorts, but I was lucky to be at the right place at the right time and found out from one of the most capable people who could answer this question. I lived in Madrid, Spain in the late 60s, early 70s.",
+      "Blockade requires local superiority To enforce a blockade at a chokepoint, you need to arrive there and stay there, winning any engagements. To win local engagements, you need to be stronger than an expected blockade-breaking force."
+    ],
+    "is_counterfactual": false
+  },
+  {
+    "id": 32,
+    "canonical_id": "canon_0146",
+    "question": "如果罗马人发现一台可以工作的蒸汽机，他们是否能够复制和使用它？",
+    "domain": "HASS",
+    "answer_type": "open",
+    "human_answers": [
+      "This question explores technological determinism and the question of whether ancient civilizations could have industrialized earlier if exposed to key inventions. The Romans had many advanced technologies including concrete, aqueducts, road networks, and mi..."
+    ],
+    "is_counterfactual": false
+  },
+  {
+    "id": 35,
+    "canonical_id": "canon_0152",
+    "question": "将真正的火箭发射到太空需要多少个模型火箭发动机？",
+    "domain": "STEM",
+    "answer_type": "open",
+    "human_answers": [
+      "About 65,000, give or take a few. You’d have to arrange them like this: [Image: image] The rocket would weigh about as much as a tow truck."
+    ],
+    "is_counterfactual": false
+  },
+  {
+    "id": 36,
+    "canonical_id": "canon_0154",
+    "question": "由于地球自转正在减慢，我们时不时地必须插入闰秒。我们能否加快地球自转，这样就不需要闰秒了？",
+    "domain": "STEM",
+    "answer_type": "open",
+    "human_answers": [
+      "The Earth’s spin is slowing down. This is annoying."
+    ],
+    "is_counterfactual": false
+  },
+  {
+    "id": 41,
+    "canonical_id": "canon_0159",
+    "question": "互联网的带宽何时（如果有的话）会超过联邦快递的带宽？",
+    "domain": "STEM",
+    "answer_type": "open",
+    "human_answers": [
+      "Never underestimate the bandwidth of a station wagon full of tapes hurtling down the highway. –Andrew Tanenbaum, 1981 If you want to transfer a few hundred gigabytes of data, it’s generally faster to FedEx a hard drive than to send the files over the internet."
+    ],
+    "is_counterfactual": false
+  },
+  {
+    "id": 42,
+    "canonical_id": "canon_0160",
+    "question": "如果哈勃望远镜瞄准地球，图像会有多详细？",
+    "domain": "STEM",
+    "answer_type": "open",
+    "human_answers": [
+      "This is a common question. The Hubble operators get it a lot, and their FAQ page answers it (http://hubblesite.org/reference_desk/faq/answer.php.id=78&cat=topten)."
+    ],
+    "is_counterfactual": false
+  },
+  {
+    "id": 44,
+    "canonical_id": "canon_0162",
+    "question": "可能有多少条独特的英文推文？世界人民需要多长时间才能将它们全部大声朗读出来？",
+    "domain": "STEM",
+    "answer_type": "open",
+    "human_answers": [
+      "High up in the North in the land called Svithjod, there stands a rock. It is a hundred miles high and a hundred miles wide."
+    ],
+    "is_counterfactual": false
+  },
+  {
+    "id": 48,
+    "canonical_id": "canon_0166",
+    "question": "以今天的技术，是否有可能发起无人回收航行者一号任务？",
+    "domain": "STEM",
+    "answer_type": "open",
+    "human_answers": [
+      "Voyager I is farther from Earth than any other manmade object. After getting a pair of gravitational kicks from Jupiter and Saturn, it’s headed out of the Solar System at a pretty high speed, and nothing else we’ve built is on track to pass it."
+    ],
+    "is_counterfactual": false
+  },
+  {
+    "id": 49,
+    "canonical_id": "canon_0167",
+    "question": "需要多大力气才能射出冰球才能将守门员本人向后撞入网内？",
+    "domain": "STEM",
+    "answer_type": "open",
+    "human_answers": [
+      "This can’t really happen. It’s not just a problem of hitting it hard enough."
+    ],
+    "is_counterfactual": false
+  },
+  {
+    "id": 51,
+    "canonical_id": "canon_0170",
+    "question": "假设我们遵守速度限制并在铺好的道路上行驶，您在驾驶时可以经历的最长日落时间是多少？",
+    "domain": "STEM",
+    "answer_type": "open",
+    "human_answers": [
+      "To answer this, we have to be sure what we mean by “sunset\". This is a sunset: [Image: image] This is not a sunset: [Image: image] For the purposes of our question, this is not a sunset: [Image: image] This is also not a sunset: [Image: image] This is defin..."
+    ],
+    "is_counterfactual": false
+  },
+  {
+    "id": 52,
+    "canonical_id": "canon_0171",
+    "question": "高速列车能否像过山车一样在垂直环路中运行，同时让乘客感到舒适？",
+    "domain": "STEM",
+    "answer_type": "closed",
+    "human_answers": [
+      "No. Since this is kind of a disappointing answer, I tried relaxing the requirements a little."
+    ],
+    "is_counterfactual": false
+  },
+  {
+    "id": 55,
+    "canonical_id": "canon_0176",
+    "question": "太阳什么时候（如果有的话）最终落在大英帝国的身上？",
+    "domain": "HASS",
+    "answer_type": "open",
+    "human_answers": [
+      "It hasn't. Yet."
+    ],
+    "is_counterfactual": false
+  },
+  {
+    "id": 58,
+    "canonical_id": "canon_0179",
+    "question": "地球上哪个地方能让你从上面跳下自由落体时间最长？使用松鼠套装怎么样？",
+    "domain": "STEM",
+    "answer_type": "open",
+    "human_answers": [
+      "The largest purely vertical drop on Earth is the face of Canada's Mount Thor (http://en.wikipedia.org/wiki/Mount_Thor), which is shaped like this: [Image: image] To make things a little less gruesome, let's suppose there's a pit at the bottom of the cliff,..."
+    ],
+    "is_counterfactual": false
+  },
+  {
+    "id": 62,
+    "canonical_id": "canon_0183",
+    "question": "如果你随机拨打一个电话号码并说“上帝保佑你”，接听电话的人只是打喷嚏的可能性有多大？平均而言，不仅仅是在春季或秋季。",
+    "domain": "STEM",
+    "answer_type": "open",
+    "human_answers": [
+      "It's hard to find good figures, but it's probably about 1 in 40,000. [Image: image] Before you pick up the phone, you should also keep in mind that there's roughly a 1 in 1,000,000,000 chance that the person you're calling just murdered someone.[1]Based on..."
+    ],
+    "is_counterfactual": false
+  },
+  {
+    "id": 63,
+    "canonical_id": "canon_0184",
+    "question": "如果你想将一架飞机固定在地面上，使其无法起飞，那么绳子必须用什么材料制成？",
+    "domain": "STEM",
+    "answer_type": "open",
+    "human_answers": [
+      "Ah, the Just Cause 2 scenario (http://www.youtube.com/results?search_query=just+cause+2+plane+grapple). At takeoff, a 747's four engines can each generate 281.57 kN of thrust."
+    ],
+    "is_counterfactual": false
+  },
+  {
+    "id": 66,
+    "canonical_id": "canon_0187",
+    "question": "如果您有整个（例如英文）维基百科的印刷版本，您需要多少台打印机才能跟上对实时版本所做的更改？",
+    "domain": "STEM",
+    "answer_type": "open",
+    "human_answers": [
+      "This many: [Image: image] That's surprisingly few printers! But before you try to create a live-updating paper Wikipedia, let's look at what those printers would be doing ..."
+    ],
+    "is_counterfactual": false
+  },
+  {
+    "id": 67,
+    "canonical_id": "canon_0188",
+    "question": "如果你可以传送到地球表面的随机位置，你看到智慧生命迹象的几率有多大？",
+    "domain": "STEM",
+    "answer_type": "open",
+    "human_answers": [
+      "The surface of the Earth is about 70% water, so you'll usually plop down into the ocean. [Image: image] But even there, you could find signs of human habitation."
+    ],
+    "is_counterfactual": false
+  },
+  {
+    "id": 68,
+    "canonical_id": "canon_0190",
+    "question": "如果我带着几罐氦气和一个巨大的未充气的气球从飞机上跳下来怎么办？然后，在下降时，我释放氦气并填充气球。我需要下落多长时间才能让气球减慢我的速度以便我能够安全着陆？",
+    "domain": "STEM",
+    "answer_type": "open",
+    "human_answers": [
+      "As ridiculous as it sounds, this is—sort of—possible. Falling from great heights is dangerous.[citation needed (https://en.wikipedia.org/wiki/Philippine_Republic_Presidential_Unit_Citation)] A balloon could actually help save you, although a regular helium..."
+    ],
+    "is_counterfactual": false
+  },
+  {
+    "id": 71,
+    "canonical_id": "canon_0193",
+    "question": "如果我们的 Twitter 时间线（我们关注的人发布的推文）实际上向两个方向延伸到屏幕之外，它们会有多高？",
+    "domain": "STEM",
+    "answer_type": "open",
+    "human_answers": [
+      "[Image: image] This is a surprisingly tricky question. The answer involves German tanks, human extinction, and the most disputed statistics problem on the internet."
+    ],
+    "is_counterfactual": false
+  },
+  {
+    "id": 73,
+    "canonical_id": "canon_0196",
+    "question": "如果一颗小行星很小但质量却很大，你真的能像小王子一样住在上面吗？",
+    "domain": "STEM",
+    "answer_type": "open",
+    "human_answers": [
+      "Last week, we looked at at life on a giant world (http://what-if.xkcd.com/67/). This week, let's look at a small one."
+    ],
+    "is_counterfactual": false
+  },
+  {
+    "id": 74,
+    "canonical_id": "canon_0197",
+    "question": "如果有的话，Facebook 上的死者个人资料何时会多于生者？",
+    "domain": "STEM",
+    "answer_type": "open",
+    "human_answers": [
+      "Either the 2060s or the 2130s. [Image: image] There are not a lot of dead people on Facebook."
+    ],
+    "is_counterfactual": false
+  },
+  {
+    "id": 75,
+    "canonical_id": "canon_0198",
+    "question": "您需要有多大的草坪，这样当您完成割草后，由于草已经长大，您需要重新开始？",
+    "domain": "HASS",
+    "answer_type": "open",
+    "human_answers": [
+      "According to the Turfgrass Extension and Outreach (http://www.turf.uiuc.edu/extension/ext-mow.html) program at UIUC,[1]The Morrow cornfields (http://admissions.illinois.edu/visit/selfguided/quad.html#morrow) operated by the university are the most valuable..."
+    ],
+    "is_counterfactual": false
+  },
+  {
+    "id": 77,
+    "canonical_id": "canon_0201",
+    "question": "距离超新星有多近才能获得致命剂量的中微子辐射？",
+    "domain": "STEM",
+    "answer_type": "open",
+    "human_answers": [
+      "The phrase \"lethal dose of neutrino radiation\" is a weird one. I had to turn it over in my head a few times after I heard it."
+    ],
+    "is_counterfactual": false
+  },
+  {
+    "id": 82,
+    "canonical_id": "canon_0209",
+    "question": "有没有什么方法可以让枪射击后子弹飞到空中，然后可以安全地用手接住？例如射手位于海平面，捕手位于山上，位于枪的最远射程处。",
+    "domain": "STEM",
+    "answer_type": "closed",
+    "human_answers": [
+      "Yes. The \"bullet catch\" is a common magic trick in which a magician appears to catch a fired bullet in mid-flight—often between their teeth."
+    ],
+    "is_counterfactual": false
+  },
+  {
+    "id": 83,
+    "canonical_id": "canon_0211",
+    "question": "如果你用与银河系恒星大小成比例的颗粒建造一个海滩，那个海滩会是什么样子？",
+    "domain": "STEM",
+    "answer_type": "open",
+    "human_answers": [
+      "Sand is interesting.[Citation needed (https://what-if.xkcd.com/83)] \"Are there more grains of sand than stars in the sky?\" is a popular question which has been tackled by many people (https://www.google.com/search?q=sand+grains+or+stars). The upshot is that..."
+    ],
+    "is_counterfactual": false
+  },
+  {
+    "id": 84,
+    "canonical_id": "canon_0213",
+    "question": "假设你有一艘绕地球轨道运行的宇宙飞船，你能通过向另一个方向击打高尔夫球来推动你的飞船达到超过逃逸速度的速度吗？如果是这样，需要多少个高尔夫球才能到达月球？",
+    "domain": "STEM",
+    "answer_type": "open",
+    "human_answers": [
+      "It depends how good your swing is. That sounds glib, but it's sort of true."
+    ],
+    "is_counterfactual": false
+  },
+  {
+    "id": 86,
+    "canonical_id": "canon_0216",
+    "question": "全球瓶装碳酸饮料库存中含有多少 CO 2？需要多少苏打水才能使大气中的CO 2 恢复到工业化前的水平？",
+    "domain": "STEM",
+    "answer_type": "open",
+    "human_answers": [
+      "For most of the history of civilization, there were about 270 parts per million of carbon dioxide in the atmosphere. In the last hundred years, industrial activity has pushed that number up (http://www.skepticalscience.com/print.php?r=45) to 400 parts per m..."
+    ],
+    "is_counterfactual": false
+  },
+  {
+    "id": 89,
+    "canonical_id": "canon_0221",
+    "question": "如果下雨的话，挡风玻璃会被雨打碎，你需要以多快的速度行驶？",
+    "domain": "STEM",
+    "answer_type": "open",
+    "human_answers": [
+      "Fast. [Image: image] Raindrops are tiny."
+    ],
+    "is_counterfactual": false
+  },
+  {
+    "id": 90,
+    "canonical_id": "canon_0226",
+    "question": "喝醉人的血会醉吗？",
+    "domain": "HASS",
+    "answer_type": "closed",
+    "human_answers": [
+      "You would have to drink a lot of blood. A person contains about 5 liters of blood, or 14 glasses."
+    ],
+    "is_counterfactual": false
+  },
+  {
+    "id": 93,
+    "canonical_id": "canon_0232",
+    "question": "来自我七岁儿子的心声：需要多少片雪花才能将整个世界覆盖在六英尺厚的雪中？ （我不知道为什么是六英尺……但这就是他问的。）",
+    "domain": "STEM",
+    "answer_type": "open",
+    "human_answers": [
+      "It's been too hot where I live, so I like thinking about this question! Snow is fluffy because it has a lot of air in it."
+    ],
+    "is_counterfactual": false
+  },
+  {
+    "id": 95,
+    "canonical_id": "canon_0234",
+    "question": "假设您要使用普通的廉价喷墨打印机以 12 点文本打印数字 1。将使用多少个墨水分子？在什么数值下，打印的数量大约等于所使用的墨水分子的数量？",
+    "domain": "STEM",
+    "answer_type": "open",
+    "human_answers": [
+      "This is the kind of problem where Fermi estimation (http://what-if.xkcd.com/84/) comes in handy. In Fermi estimation, we're not concerned about exact numbers."
+    ],
+    "is_counterfactual": false
+  },
+  {
+    "id": 97,
+    "canonical_id": "canon_0238",
+    "question": "一个人一生能走遍整个纽约市吗？ （包括公寓内）",
+    "domain": "STEM",
+    "answer_type": "closed",
+    "human_answers": [
+      "Like the answer to Paint the Earth (http://what-if.xkcd.com/84/), the answer to the first part of this question is pretty straightforward to look up. But what if it weren't?"
+    ],
+    "is_counterfactual": false
+  },
+  {
+    "id": 101,
+    "canonical_id": "canon_0244",
+    "question": "如果你抛开赛车比赛的所有规则，举办一场比赛，只是让一个人以尽可能快的速度绕赛道 200 倍，那么什么策略会获胜呢？假设赛车手必须生存。",
+    "domain": "STEM",
+    "answer_type": "open",
+    "human_answers": [
+      "The best you'll be able to do is about 90 minutes. There are lots of ways you could build your vehicle—an electric car,[1]With wheels designed to dig into the pavement on turns."
+    ],
+    "is_counterfactual": false
+  },
+  {
+    "id": 106,
+    "canonical_id": "canon_0251",
+    "question": "如果每个仙女都是从孩子的第一声笑声中诞生并且仙女是不朽的，那么会有多少仙女飞来飞去？",
+    "domain": "STEM",
+    "answer_type": "open",
+    "human_answers": [
+      "\"There are always a lot of young ones,\" explained Wendy, who was now quite an authority, \"because you see when a new baby laughs for the first time a new fairy is born, and as there are always new babies there are always new fairies. They live in nests on t..."
+    ],
+    "is_counterfactual": false
+  },
+  {
+    "id": 108,
+    "canonical_id": "canon_0253",
+    "question": "您正坐在马里亚纳海沟上方的船上。如果将一个 7 公斤重的保龄球从侧面掉下来，需要多长时间才能落到底部？",
+    "domain": "STEM",
+    "answer_type": "open",
+    "human_answers": [
+      "It is a good thing you mentioned the weight, because of a very surprising fact: Most bowling balls float. It's true."
+    ],
+    "is_counterfactual": false
+  },
+  {
+    "id": 109,
+    "canonical_id": "canon_0254",
+    "question": "如果你制造了一部可以进入太空的电梯（就像你提到的十亿层建筑中的电梯）并建造了一个向上的楼梯（假设气压受到调节），那么爬到顶部需要多长时间？",
+    "domain": "STEM",
+    "answer_type": "open",
+    "human_answers": [
+      "A week or two, if you're a champion stair-climber. Or 12 hours if you're on a motorcycle."
+    ],
+    "is_counterfactual": false
+  },
+  {
+    "id": 110,
+    "canonical_id": "canon_0255",
+    "question": "拔河比赛中的两队是否有可能克服铁棒的极限抗拉强度并将其拉开？团队必须有多大？",
+    "domain": "STEM",
+    "answer_type": "closed",
+    "human_answers": [
+      "A couple dozen people could pull a half-inch iron rod apart. Tug-of-war, a simple game in which two teams try to pull a rope in opposite directions, has a surprisingly bloody history."
+    ],
+    "is_counterfactual": false
+  },
+  {
+    "id": 112,
+    "canonical_id": "canon_0258",
+    "question": "我长期以来一直在考虑在汽车前部安装一个火焰喷射器，以便在开车穿过汽车之前融化冰雪。现在我意识到火焰喷射器不切实际，但是高功率微波发射器呢？",
+    "domain": "STEM",
+    "answer_type": "open",
+    "human_answers": [
+      "Believe it or not, your flamethrower idea is actually the more practical of the two. The flamethrower also has the advantage that, unlike the microwave, it won't interfere with wifi (unless you aim it directly at the router)."
+    ],
+    "is_counterfactual": false
+  },
+  {
+    "id": 113,
+    "canonical_id": "canon_0261",
+    "question": "因此，您从镇上最高的建筑物上方的高处坠落，并且您没有降落伞。但是等等！在那座摩天大楼一侧的中间有一根旗杆伸出来，没有旗帜！你倾斜下降角度并抓住杆子足够长的时间来旋转，这样当你松开杆子时，你现在就会回到天空。当重力减慢你的速度并使你停下来时，你到达摩天大楼的顶部，在那里你伸出手将自己拉到安全的地方。这种情况发生的可能性有多大？",
+    "domain": "HASS",
+    "answer_type": "open",
+    "human_answers": [
+      "If you're like me, your first thought on hearing this question was, \"That's ridiculous; there's no way that could work.\" Your first thought is right. But just to be sure, let's take a closer look."
+    ],
+    "is_counterfactual": false
+  },
+  {
+    "id": 121,
+    "canonical_id": "canon_0272",
+    "question": "一个人用自己的唾液需要多长时间才能填满整个游泳池？",
+    "domain": "STEM",
+    "answer_type": "open",
+    "human_answers": [
+      "[Image: image] The average kid produces about half a liter of saliva per day, according to the paper Estimation of the total saliva volume produced per day in five-year-old children (http://www.ncbi.nlm.nih.gov/pubmed/7487581), which I like to imagine was m..."
+    ],
+    "is_counterfactual": false
+  },
+  {
+    "id": 122,
+    "canonical_id": "canon_0273",
+    "question": "你能用放大镜和月光来生火吗？",
+    "domain": "STEM",
+    "answer_type": "closed",
+    "human_answers": [
+      "At first, this sounds like a pretty easy question. A magnifying glass concentrates light on a small spot."
+    ],
+    "is_counterfactual": false
+  },
+  {
+    "id": 125,
+    "canonical_id": "canon_0276",
+    "question": "地球人口每年摄入的热量占太阳热量（每天）的百分之多少？可以对我们的饮食进行哪些改变才能使卡路里含量等于太阳的能量？",
+    "domain": "STEM",
+    "answer_type": "open",
+    "human_answers": [
+      "0.000000000065%. [Image: image] A McDonald's Big Mac contains 540 (dietary) calories (http://nutrition.mcdonalds.com/getnutrition/nutritionfacts.pdf) of energy, or about 2,250,000 joules."
+    ],
+    "is_counterfactual": false
+  },
+  {
+    "id": 126,
+    "canonical_id": "canon_0277",
+    "question": "我男朋友最近乘坐了一架有无线网络的飞机，当他在飞机上时，他若有所思地问我是否可以给他寄一份披萨。我开玩笑地给他发了一张鹦鹉嘴里叼着披萨片的照片。显然，我的男朋友在抵达肯尼迪机场之前必须不吃披萨。但这提出了一个问题：一只鸟可以送出标准的20英寸盒装纽约式奶酪披萨吗？如果可以的话，需要什么样的鸟呢？",
+    "domain": "HASS",
+    "answer_type": "open",
+    "human_answers": [
+      "A bird could, possibly, deliver a pizza to a house. Delivering it to an airliner is a lot harder."
+    ],
+    "is_counterfactual": false
+  },
+  {
+    "id": 128,
+    "canonical_id": "canon_0279",
+    "question": "需要多少只萤火虫才能与太阳的亮度相匹配？",
+    "domain": "STEM",
+    "answer_type": "open",
+    "human_answers": [
+      "Not that many! I mean, it's definitely one of those gigantic numbers with lots of zeroes, but in the grand scheme of things, there aren't as many zeroes as you might expect."
+    ],
+    "is_counterfactual": false
+  },
+  {
+    "id": 129,
+    "canonical_id": "canon_0280",
+    "question": "由于死亡谷低于海平面，我们可以在大海上挖一个洞并用水填满吗？",
+    "domain": "STEM",
+    "answer_type": "open",
+    "human_answers": [
+      "Yes! We can do anything we want."
+    ],
+    "is_counterfactual": false
+  },
+  {
+    "id": 130,
+    "canonical_id": "canon_0281",
+    "question": "与地球的半径相比，地球的大气层确实很薄。在人们窒息之前我需要挖多大的洞？",
+    "domain": "STEM",
+    "answer_type": "open",
+    "human_answers": [
+      "The idea here is straightforward: When you dig a hole in the ground, the hole fills up with air.[1]The dirt you pile up outside the hole displaces air, so at first you won't have much effect on the surrounding atmosphere, but the effect grows as the hole ge..."
+    ],
+    "is_counterfactual": false
+  },
+  {
+    "id": 132,
+    "canonical_id": "canon_0283",
+    "question": "烤面包机放在冰箱里还能用吗？",
+    "domain": "STEM",
+    "answer_type": "closed",
+    "human_answers": [
+      "On a recent episode (http://www.maximumfun.org/my-brother-my-brother-and-me/mbmbam-343-sauce-doctors-blessing) of Justin, Travis, and Griffin McElroy's terrific advice podcast, My Brother, My Brother and Me, the brothers pondered a Yahoo Answers question ab..."
+    ],
+    "is_counterfactual": false
+  },
+  {
+    "id": 133,
+    "canonical_id": "canon_0284",
+    "question": "我曾经在渔业队工作，我们会使用电动渔机背包暂时击晕小鱼（30 - 100 毫米长），这样我们就可以用网将它们捞起来以识别和测量它们。由于表面积较大，较大的鱼往往会被击晕的时间稍长一些，但我不认为这种关系对于非常大的动物来说会维持。你能用电鱼钓蓝鲸吗？您必须将电子钓鱼器设置为多少电压？",
+    "domain": "STEM",
+    "answer_type": "open",
+    "human_answers": [
+      "So you want to give endangered whales powerful electric shocks. Great!"
+    ],
+    "is_counterfactual": false
+  },
+  {
+    "id": 134,
+    "canonical_id": "canon_0285",
+    "question": "我儿子（5岁）今天问我：如果有一种消防员的杆子从月球滑到地球，需要多长时间才能从月球滑到地球？",
+    "domain": "STEM",
+    "answer_type": "open",
+    "human_answers": [
+      "First, let's get a few things out of the way: In real life, we can't put a metal pole between the Earth and the Moon.[1]For one, someone at NASA would probably yell at us. The end of the pole near the Moon would be pulled toward the Moon by the Moon's gravi..."
+    ],
+    "is_counterfactual": false
+  },
+  {
+    "id": 135,
+    "canonical_id": "canon_0286",
+    "question": "听说香蕉有放射性。如果它们具有放射性，那么它们就会辐射能量。你需要多少根香蕉来为一间房子供电？",
+    "domain": "STEM",
+    "answer_type": "open",
+    "human_answers": [
+      "Bananas are radioactive. But don't worry, it's fine."
+    ],
+    "is_counterfactual": false
+  },
+  {
+    "id": 137,
+    "canonical_id": "canon_0288",
+    "question": "我的女儿最近在美国获得了驾驶许可证，并渴望有一天能够访问欧洲大陆。她已经了解了足够多的交通规则，知道永远不要把车开进大海；不过，她开玩笑地表示，如果有足够数量的租车，她最终可以通过多次向东行驶到达欧洲。问题是，建造一座横跨大西洋的汽车桥需要多少辆车？",
+    "domain": "HASS",
+    "answer_type": "open",
+    "human_answers": [
+      "After extensive research, I can conclusively state that this would be a violation of your rental car agreement. Also, you would disrupt ocean circulation in the North Atlantic, potentially seriously altering the climate in the northern hemisphere."
+    ],
+    "is_counterfactual": false
+  },
+  {
+    "id": 139,
+    "canonical_id": "canon_0290",
+    "question": "我可以通过捕获一颗彗星并将其扔进海洋来冷却地球吗，就像一杯水中的冰块一样？",
+    "domain": "STEM",
+    "answer_type": "closed",
+    "human_answers": [
+      "No. In fact, it's honestly sort of impressive to find a solution that would actively make the problem worse in so many different ways."
+    ],
+    "is_counterfactual": false
+  },
+  {
+    "id": 141,
+    "canonical_id": "canon_0295",
+    "question": "圣诞老人破产了。让别人成为圣诞老人要花多少钱？好吧，圣诞老人终于做到了。由于一些相当可疑的投资和房地产市场上的一些坏运气（他出租的几块冰盖刚刚融化），他破产了。因此，克里斯·克林格尔必须吸引我们这些凡人，找到一个人——最好是个人——能够为他的运营提供一年的资金，同时他试图确保更好的财务基础。圣诞老人委托我做一项可行性研究——也就是说，看看是否有人愿意帮助他。我必须首先计算出他每年成为圣诞老人要花多少钱（不，他没有告诉我，而且可能不会 - 圣诞老人是秘密的），在一个数量级之内。我已经确定了圣诞老人肯定会在一些关键地方使用金钱。它们包括： 获取制造玩具的原材料。付钱给小精灵制作玩具。产生他运行北极所需的所有能量。与驯鹿打交道。考虑到这些 - 以及我错过的任何事情 - 为圣诞老人的运营提供一年的资金需要多少钱？ 基本假设和说明：圣诞老人需要向他名单上的大约 20 亿儿童每人分发一个玩具。他需要在一晚上之内完成这件事。他有一整年的时间来制作玩具，但他需要精灵在他的工作室里制作它们（而且他们需要得到报酬！）。不分包；必须找到投资者已经够尴尬的了。圣诞老人的工作室位于北极或附近。圣诞老人还保留着去年的驯鹿、作坊等。然而，他今年仍然需要​​购买新的原材料、食物等，以及产生能源。我们不是从头开始。雪橇由驯鹿提供动力；在考虑运输所需的能量时，我们必须考虑喂养驯鹿所需的能量（我使用的模型类似于圣诞老人的驯鹿必须消耗多少卡路里？）。",
+    "domain": "HASS",
+    "answer_type": "open",
+    "human_answers": [
+      "Pay for elves Joe estimates that it would take 85,851 elves working 16 hours each day for 364 days to make roughly 2 billion toys. If Santa pays his elves about \\$10.00 per hour (in US dollars), that costs $$85,851 \\text{ elves}\\times\\$10.00\\text{ per hour}...",
+      "Outsourcing delivery The obvious solution is to use external fulfillment services instead of delivering himself, in the vein of dropshipping. In this model, Santa would produce all his toys at the North Pole, and deliver them somewhere else, say by November..."
+    ],
+    "is_counterfactual": false
+  },
+  {
+    "id": 143,
+    "canonical_id": "canon_0302",
+    "question": "如果我们把人类放在大气层与地球大气层不同但仍含有氧气的行星上，人类能够呼吸吗？来自维基百科：按体积计算，干燥空气含有 78.09% 氮气、20.95% 氧气、0.93% 氩气、0.039% 二氧化碳和少量其他气体。例如，人类能够在这样的大气中生存吗？ ： 100% 氧气，无其他 10% 氧气，90% 氮气 10% 氧气，90% 氩气 10% 氧气，90% 二氧化碳 10% 氧气，90% 氦气 10% 氧气，90% 氙气 2% 氧气，98% 其他无毒元素",
+    "domain": "STEM",
+    "answer_type": "open",
+    "human_answers": [
+      "There are three separate issues here: Too much oxygen, and the human body (as well as any other organic material) will be highly flammable. You don't really want to live there.",
+      "100% oxygen is dangerous - stuff will burn, oxygenation can damage tissues. Apollo 1 had pure oxygen atmosphere, did not ended up well.",
+      "100% O 2 At normal atmospherical pressure ( 101.325 kPa ) if your only gas is O 2 you will have a partial pressure of 101.325 kPa of O 2 ... lethal, deadly and painful.",
+      "10% is too little and wouldn't work. If you increased it to 20%: 100% oxygen: I think we'd spontaneously combust...this is toxic as well."
+    ],
+    "is_counterfactual": false
+  },
+  {
+    "id": 144,
+    "canonical_id": "canon_0305",
+    "question": "如何彻底摧毁一座城市，而不为4000年后的人类留下任何线索？背景 我想彻底烧毁一座城市。一切不得残留，尘归尘，尘归尘。尽管我是一个超自然的存在，但我希望这一切以自然的方式发生。我还希望这次破坏不会留下任何痕迹，以便 4000 年后人类可以利用这些痕迹来确定到底发生了什么。然而，该事件可能会留下痕迹，让他们猜测发生了什么，但绝对不应该导致确切的原因。细节 完全烧毁一座城市（阅读：摧毁，但我喜欢火）。该市地处海拔以上，属半干旱气候。该事件可能不会留下任何线索。这意味着 4000 年后的人类无法准确识别发生了什么。然而，破坏可能会留下痕迹，让人们想知道到底发生了什么。主要的一点是，这座城市本身应该成为一个传说，也就是说，毁灭地点不应该留下任何可以证明被毁城市存在的痕迹。不过，如果人们知道发生了某种自然灾害也很好，但最好他们不确切知道是什么类型的自然灾害。 事件时间：公元前 2,000 年（大约）。销毁最好在 24 小时内发生。优选地，破坏方法可以摧毁主要用岩石和粘土类物质建造的城市。我有什么选择？有什么可以利用的自然灾害吗？这是否可能以自然的方式实现？请发挥创意。我本以为是“从天而降的火”，但陨石撞击的痕迹要持续 4000 多年。编辑 1：我删除了以下要求，以使更多答案成为可能：该区域不存在火山活动或地震活动。编辑2：答案和评论的数量非常多，谢谢！我重写了要求/细节，使事情更加清晰。我还在其中两个添加了“最好”一词，这意味着应该可以提供更多的答案。只要记住“最好”...还要注意，这个问题首先谈论两个城市。我将其更改为一个城市，因为：如果它适用于一个城市，那么它可能适用于任意数量的城市。",
+    "domain": "HASS",
+    "answer_type": "open",
+    "human_answers": [
+      "I have much academic experience with some of this, especially the second part of your question. I'll address a few different sides of things.",
+      "Moved from comment to answer because I've done more research. Try the biblical account of Sodom and Gomorrah, believed to be near the coast of the Dead Sea .",
+      "It doesn't necessarily have to be a natural disaster in the traditional sense. It could be that a natural/weaponised biological plague tore through the population making them go completely mad."
+    ],
+    "is_counterfactual": false
+  },
+  {
+    "id": 145,
+    "canonical_id": "canon_0313",
+    "question": "一种从不接触地面的鸟 正如我们目前所知，鸟类在地面上筑巢并产卵。有着锋利牙齿的人和物生活在地面上。也有一些东西有爪子和喙在空中，但较少。我想知道是否存在一种像鸟一样的动物，一生都在空中度过，死后才落到地上。我已经知道鸟类可以在空中睡觉，但我需要帮助：找出一种方法来解释我的鸟类（或蝙蝠，或其他什么）如何进化到永远不会接触地面 - 我缺乏一个令人信服且可信的故事。粮食情况。除非我也有飞行植物（考虑到能量方程，不太可能），否则它必须是捕食其他飞行生物的食肉动物，或者从地面抓取动物。更具体地说，我担心生命的第一阶段。也许是给新生儿准备一个类似袋鼠的育儿袋？最后，为了故事相关的目的，我更愿意让这只飞行的野兽尽可能大。你认为它能长到多大并且仍然全天候飞行？ （上图：诺斯罗普仍然制造出最好的羽蛇神）后期编辑：感谢大家提供了大量的好建议！ 感谢您的所有回答，我希望在这种情况下我能接受另外两个回答。除了我接受的@VilleNiemi 的答案之外，我认为@Ivy_Lynx 的答案值得更多的支持，我也从@CortAmmon 那里得到了一些有趣的想法。",
+    "domain": "HASS",
+    "answer_type": "open",
+    "human_answers": [
+      "Evolution Since the defining feature is not nesting on ground, the starting point should be the nesting behaviour. There should be a strong pressure to reduce time spent on the ground such as predators or competition for suitable locations with other species.",
+      "Most creature designs, if anthropomorphized, can be thought of as a balance between seizing opportunities and fearfully avoiding mishaps. As a result, most designs are very flexible, adapting to new situations as they come.",
+      "I think any answer to this question really hinges on how earth-like you want your planet to be and how earth-like you want the rest of your fauna and flora to be. Since you don't place any restrictions on these, I'll take the liberty to assume these factors...",
+      "So here's where we can start: Some birds (megapodes) are superprecocial , i.e. they can fly on the day they hatch."
+    ],
+    "is_counterfactual": false
+  },
+  {
+    "id": 146,
+    "canonical_id": "canon_0317",
+    "question": "骑猪的骑兵可能吗？最近，我的邻居让我很不高兴。我发现他计划以某种方式改进他的投石机，以便将肮脏的东西扔到河对岸。我告诉他我的猪骑骑兵会攻击他。我必须向你坦白一件事……我还没有任何骑猪的骑兵……！能有骑猪的骑兵吗？如果大人太重的话，我可以派小孩和矮人去战斗。我想要最少的东西（否则我会有安装在沙发上的骑兵，更舒服）：沿着想要的方向行走，当敌人在那里时不要逃跑，甚至如果可能的话向他们冲锋。是否可以？",
+    "domain": "HASS",
+    "answer_type": "closed",
+    "human_answers": [
+      "Absolutely! Pigs are dangerous animals.",
+      "I'm going to disagree with a lot of people here and say that, while not impossible, it would be very very difficult to use pigs. This isn't about the size of the pig nor its strength."
+    ],
+    "is_counterfactual": false
+  },
+  {
+    "id": 148,
+    "canonical_id": "canon_0320",
+    "question": "冷战时期建造的潜艇能否在水下保持压力50年？我正在构思一部小说，需要大致了解这是否可行。理想情况下，角色能够在现代的潜艇上安装另一艘潜水器（通常用于救援），并使用舱口或切开船体以进入仍然加压的部分。他们在里面发现了被遗忘的武器储藏室等等……一艘大约 50 年前沉没的冷战潜艇还能在其内部保持压力吗？会不会因为环境的原因造成太多的腐蚀和压力？深度会有影响吗？如果这几乎不可能，那可能对我有利，因为当他们回收物品时，潜艇可能会在他们周围崩溃。如果不可能的话，我会让他们使用某种安装在副臂上的切割器来切割一段，并且武器可以放在某种密封的容器中。",
+    "domain": "HASS",
+    "answer_type": "closed",
+    "human_answers": [
+      "It's even conceivable that all ballast tanks, vents and control systems were completely compromised, and so the sub sank with no attitude controls (bow planes & stern planes completely inoperative) but some of the crew stayed alive long enough to isolate th...",
+      "So fun fact, because this question assumes Hull Integrity: When building the famous ride 20,000 Leagues Under the Sea for Walt Disneyland, Walt and his engineers had to figure out how to build a vehicle that could survive being partially submerged in water...",
+      "Could a cold war submarine that sunk about 50 years ago still maintain pressure within it? No."
+    ],
+    "is_counterfactual": false
+  }
+]
