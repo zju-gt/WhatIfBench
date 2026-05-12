@@ -14,10 +14,18 @@ except ImportError:  # pragma: no cover
     from utils import extract_json_text
 
 
+OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1"
+MODELROUTER_BASE_URL = "https://routify.alibaba-inc.com/protocol/openai/v1"
+API_SOURCE_BASE_URLS = {
+    "openrouter": OPENROUTER_BASE_URL,
+    "modelrouter": MODELROUTER_BASE_URL,
+}
+
+
 @dataclass
 class OpenAICompatibleClient:
     api_key: str
-    base_url: str = "https://openrouter.ai/api/v1"
+    base_url: str = OPENROUTER_BASE_URL
     timeout: int = 120
     max_retries: int = 3
 
@@ -95,9 +103,34 @@ class OpenAICompatibleClient:
         raise RuntimeError(f"OpenAI-compatible request failed: {last_error}")
 
 
-def from_env(api_key: str | None = None, base_url: str | None = None) -> OpenAICompatibleClient:
-    api_key = api_key or os.getenv("OPENROUTER_API_KEY") or os.getenv("OPENAI_API_KEY")
+def from_env(
+    api_key: str | None = None,
+    base_url: str | None = None,
+    api_source: str | None = None,
+) -> OpenAICompatibleClient:
+    source = (api_source or os.getenv("API_SOURCE") or "openrouter").strip().lower()
+    if source not in API_SOURCE_BASE_URLS:
+        raise ValueError(f"Unsupported api_source: {source}. Choose openrouter or modelrouter.")
+
+    if api_key is None:
+        if source == "modelrouter":
+            api_key = (
+                os.getenv("MODELROUTER_API_KEY")
+                or os.getenv("LLM_API_KEY")
+                or os.getenv("OPENAI_API_KEY")
+                or os.getenv("API_KEY")
+            )
+        else:
+            api_key = os.getenv("OPENROUTER_API_KEY") or os.getenv("OPENAI_API_KEY") or os.getenv("API_KEY")
     if not api_key:
-        raise EnvironmentError("Set OPENROUTER_API_KEY or OPENAI_API_KEY")
-    base_url = base_url or os.getenv("OPENAI_BASE_URL", "https://openrouter.ai/api/v1")
+        if source == "modelrouter":
+            raise EnvironmentError("Set MODELROUTER_API_KEY, LLM_API_KEY, OPENAI_API_KEY, or API_KEY")
+        raise EnvironmentError("Set OPENROUTER_API_KEY, OPENAI_API_KEY, or API_KEY")
+
+    if base_url is None:
+        if source == "modelrouter":
+            base_url = os.getenv("MODELROUTER_BASE_URL") or os.getenv("LLM_BASE_URL") or os.getenv("OPENAI_BASE_URL")
+        else:
+            base_url = os.getenv("OPENAI_BASE_URL")
+    base_url = base_url or API_SOURCE_BASE_URLS[source]
     return OpenAICompatibleClient(api_key=api_key, base_url=base_url)

@@ -5,7 +5,7 @@ import urllib.request
 
 import pytest
 
-from src.openai_client import OpenAICompatibleClient
+from src.openai_client import MODELROUTER_BASE_URL, OpenAICompatibleClient, from_env
 
 
 class FakeHTTPResponse:
@@ -75,3 +75,18 @@ def test_chat_completion_merges_extra_body_fields(monkeypatch):
     assert result == "ok"
     assert seen["body"]["reasoning"] == {"effort": "none", "exclude": True}
     assert seen["body"]["thinking"] == {"type": "disabled"}
+
+
+def test_from_env_uses_modelrouter_defaults(monkeypatch):
+    monkeypatch.delenv("OPENROUTER_API_KEY", raising=False)
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    monkeypatch.delenv("API_KEY", raising=False)
+    monkeypatch.delenv("OPENAI_BASE_URL", raising=False)
+    monkeypatch.delenv("LLM_BASE_URL", raising=False)
+    monkeypatch.delenv("MODELROUTER_BASE_URL", raising=False)
+    monkeypatch.setenv("MODELROUTER_API_KEY", "mr-key")
+
+    client = from_env(api_source="modelrouter")
+
+    assert client.api_key == "mr-key"
+    assert client.base_url == MODELROUTER_BASE_URL

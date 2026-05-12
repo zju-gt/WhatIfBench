@@ -17,6 +17,7 @@ def build_parser() -> argparse.ArgumentParser:
     common = argparse.ArgumentParser(add_help=False)
     common.add_argument("--api-key", default=None)
     common.add_argument("--base-url", default=None)
+    common.add_argument("--api-source", choices=["openrouter", "modelrouter"], default=None)
 
     parser = argparse.ArgumentParser(prog="whatif-mvp")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -51,7 +52,7 @@ def build_parser() -> argparse.ArgumentParser:
 def main() -> int:
     parser = build_parser()
     args = parser.parse_args()
-    client = from_env(api_key=args.api_key, base_url=args.base_url)
+    client = from_env(api_key=args.api_key, base_url=args.base_url, api_source=args.api_source)
 
     if args.command == "run":
         out = run(
