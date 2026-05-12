@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import time
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 from typing import Any
 
@@ -445,8 +446,187 @@ def build_summary(items: list[dict[str, Any]]) -> dict[str, Any]:
     }
 
 
+def build_ordered_items(benchmark: list[dict[str, Any]], results: dict[str, dict[str, Any]]) -> list[dict[str, Any]]:
+    return [results[item_key(item)] for item in benchmark if item_key(item) in results]
+
+
+def build_progress_state(
+    total_items: int,
+    completed_items: list[dict[str, Any]],
+    failed_items: list[dict[str, Any]],
+) -> dict[str, Any]:
+    succeeded = len(completed_items)
+    failed = len(failed_items)
+    processed = succeeded + failed
+    scores = [float(item.get("total_score", 0.0)) for item in completed_items]
+    return {
+        "total": total_items,
+        "processed": processed,
+        "succeeded": succeeded,
+        "failed": failed,
+        "pending": max(total_items - processed, 0),
+        "mean_score": mean(scores) if scores else None,
+    }
+
+
+def build_failure_item(item: dict[str, Any], error: Any) -> dict[str, Any]:
+    return {
+        **item,
+        "evaluation_status": "failed",
+        "evaluation_error": str(error),
+    }
+
+
+def is_failed_item(item: dict[str, Any]) -> bool:
+    return item.get("evaluation_status") == "failed" and bool(item.get("evaluation_error"))
+
+
+def build_checkpoint_payload(
+    benchmark: list[dict[str, Any]],
+    completed_items: dict[str, dict[str, Any]],
+    failed_items: dict[str, dict[str, Any]],
+    answer_model: str,
+    judge_model: str,
+    parser_model: str,
+    timestamp: str,
+    benchmark_path: str,
+    answer_file: Path,
+    concurrency: int,
+) -> dict[str, Any]:
+    ordered_items = build_ordered_items(benchmark, completed_items)
+    ordered_failures = build_ordered_items(benchmark, failed_items)
+    state = build_progress_state(len(benchmark), ordered_items, ordered_failures)
+    return {
+        "meta": {
+            "task": "evaluator",
+            "answer_model": answer_model,
+            "judge_model": judge_model,
+            "parser_model": parser_model,
+            "timestamp": timestamp,
+            "source_benchmark": str(resolve_input_path(benchmark_path)),
+            "source_answers": str(answer_file),
+            "count": len(ordered_items),
+            "failure_count": len(ordered_failures),
+            "concurrency": concurrency,
+            "status": "complete" if state["processed"] == len(benchmark) else "partial",
+        },
+        "state": state,
+        "summary": build_summary(ordered_items),
+        "items": ordered_items,
+        "failures": ordered_failures,
+    }
+
+
 def write_checkpoint(path: Path, payload: dict[str, Any]) -> None:
     write_json(path, payload)
+
+
+def update_progress(progress: Any, state: dict[str, Any]) -> None:
+    set_postfix = getattr(progress, "set_postfix", None)
+    if not set_postfix:
+        return
+    postfix: dict[str, Any] = {
+        "ok": state["succeeded"],
+        "fail": state["failed"],
+    }
+    if state["mean_score"] is not None:
+        postfix["score"] = f"{state['mean_score']:.3f}"
+    set_postfix(postfix)
+
+
+def evaluate_item(
+    client: OpenAICompatibleClient,
+    item: dict[str, Any],
+    answer_item: dict[str, Any] | None,
+    judge_model: str,
+    parser_model: str,
+    index: int,
+    total_items: int,
+) -> dict[str, Any]:
+    key = item_key(item)
+    if not answer_item:
+        raise KeyError(f"Missing answer for item {key}")
+    model_answer = resolve_answer_text(answer_item)
+    if model_answer is None:
+        answer_error = answer_item.get("model_answer_error") or answer_item.get("answer_error") or "missing answer"
+        raise ValueError(f"missing answer: {answer_error}")
+
+    question = item["question"]
+    answer_type = item.get("answer_type", "open")
+
+    question_preview = question.replace("\n", " ")
+    if len(question_preview) > 120:
+        question_preview = question_preview[:117] + "..."
+    log_write(f"[{index}/{total_items}] {key} | {answer_type} | {question_preview}")
+
+    log_write(f"[{key}] parser")
+    graph_record = parse_graph_record(client, parser_model, question, model_answer)
+    graph = graph_record["graph"]
+    rst_record = graph_record.get("rst_record", {})
+    edge_scores = []
+    edges = graph.get("edges", [])
+    for edge_idx, edge in enumerate(edges, start=1):
+        source_id = edge.get("source")
+        target_id = edge.get("target")
+        relation_type = str(edge.get("relation_type", edge.get("type", "")))
+        nodes = {node["id"]: node["text"] for node in graph.get("nodes", []) if "id" in node and "text" in node}
+        source_text = nodes.get(source_id, str(source_id))
+        target_text = nodes.get(target_id, str(target_id))
+        source_preview = source_text.replace("\n", " ")
+        target_preview = target_text.replace("\n", " ")
+        if len(source_preview) > 80:
+            source_preview = source_preview[:77] + "..."
+        if len(target_preview) > 80:
+            target_preview = target_preview[:77] + "..."
+        log_write(f"[{key}] edge {edge_idx}/{len(edges)}")
+        edge_scores.append(
+            eval_edge(
+                client,
+                judge_model,
+                question,
+                source_text,
+                target_text,
+                relation_type,
+                model_answer,
+                log_context=f"[{key}][pm][edge {edge_idx}/{len(edges)}]",
+            )
+        )
+
+    log_write(f"[{key}] rubric")
+    pm_score = mean(score["score"] for score in edge_scores) if edge_scores else 0.0
+    rubric_score = eval_rubric(client, judge_model, question, item.get("rubrics", {}), model_answer)
+    rm_score = rubric_score["score"]
+
+    om_score: float | None = None
+    if answer_type == "closed":
+        log_write(f"[{key}] om")
+        gold = safe_get_first_answer(item)
+        if gold is None:
+            raise ValueError(f"Closed item {key} has no gold answer")
+        om_score = eval_outcome(client, judge_model, question, gold, model_answer)["score"]
+
+    available = [pm_score, rm_score] + ([om_score] if om_score is not None else [])
+    total_score = mean(available)
+    return {
+        **item,
+        "model_answer": model_answer,
+        "pm_score": pm_score,
+        "rm_score": rm_score,
+        "om_score": om_score,
+        "total_score": total_score,
+        "parsed_rst_raw": rst_record.get("raw_output"),
+        "parsed_rst": rst_record,
+        "parsed_rst_source": rst_record.get("source"),
+        "parsed_rst_error": rst_record.get("error"),
+        "parsed_dag": graph,
+        "parsed_dag_source": graph_record["source"],
+        "parsed_dag_error": graph_record["error"],
+        "metrics": {
+            "pm": {"score": pm_score, "edges": edge_scores, "graph": graph},
+            "rm": rubric_score,
+            "om": None if om_score is None else {"score": om_score},
+        },
+    }
 
 
 def evaluate(
@@ -456,7 +636,9 @@ def evaluate(
     judge_model: str,
     parser_model: str,
     output_dir: str,
+    concurrency: int = 1,
 ) -> Path:
+    concurrency = max(1, int(concurrency))
     benchmark = load_benchmark_items(benchmark_path)
     answer_file = resolve_input_path(answer_path)
     answer_map = load_answer_map(answer_file)
@@ -472,136 +654,148 @@ def evaluate(
     )
 
     completed_items: dict[str, dict[str, Any]] = {}
+    failed_items: dict[str, dict[str, Any]] = {}
     if existing_payload:
         for existing_item in existing_payload.get("items", []):
             if isinstance(existing_item, dict) and is_completed_item(existing_item):
                 completed_items[item_key(existing_item)] = existing_item
+        for existing_item in existing_payload.get("failures", []):
+            if isinstance(existing_item, dict) and is_failed_item(existing_item):
+                key = item_key(existing_item)
+                if key not in completed_items:
+                    failed_items[key] = existing_item
 
     total_items = len(benchmark)
-    for index, item in enumerate(tqdm(benchmark, desc=f"eval:{judge_model}", unit="item"), start=1):
+    pending_items: list[tuple[int, dict[str, Any]]] = []
+    for index, item in enumerate(benchmark, start=1):
         key = item_key(item)
         if key in completed_items:
             log_write(f"[{index}/{total_items}] {key} | skip (resumed)")
             continue
-
-        answer_item = answer_map.get(key)
-        if not answer_item:
-            raise KeyError(f"Missing answer for item {key}")
-        model_answer = resolve_answer_text(answer_item)
-        if model_answer is None:
-            answer_error = answer_item.get("model_answer_error") or answer_item.get("answer_error") or "missing answer"
-            log_write(f"[{index}/{total_items}] {key} | skip (missing answer: {answer_error})")
+        if key in failed_items:
+            log_write(f"[{index}/{total_items}] {key} | skip (failed)")
             continue
-        question = item["question"]
-        answer_type = item.get("answer_type", "open")
-
-        question_preview = question.replace("\n", " ")
-        if len(question_preview) > 120:
-            question_preview = question_preview[:117] + "..."
-        log_write(f"[{index}/{total_items}] {key} | {answer_type} | {question_preview}")
-
-        log_write(f"[{key}] parser")
-        graph_record = parse_graph_record(client, parser_model, question, model_answer)
-        graph = graph_record["graph"]
-        rst_record = graph_record.get("rst_record", {})
-        edge_scores = []
-        edges = graph.get("edges", [])
-        for edge_idx, edge in enumerate(edges, start=1):
-            source_id = edge.get("source")
-            target_id = edge.get("target")
-            relation_type = str(edge.get("relation_type", edge.get("type", "")))
-            nodes = {node["id"]: node["text"] for node in graph.get("nodes", []) if "id" in node and "text" in node}
-            source_text = nodes.get(source_id, str(source_id))
-            target_text = nodes.get(target_id, str(target_id))
-            source_preview = source_text.replace("\n", " ")
-            target_preview = target_text.replace("\n", " ")
-            if len(source_preview) > 80:
-                source_preview = source_preview[:77] + "..."
-            if len(target_preview) > 80:
-                target_preview = target_preview[:77] + "..."
-            log_write(f"[{key}] edge {edge_idx}/{len(edges)}")
-            edge_scores.append(
-                eval_edge(
-                    client,
-                    judge_model,
-                    question,
-                    source_text,
-                    target_text,
-                    relation_type,
-                    model_answer,
-                    log_context=f"[{key}][pm][edge {edge_idx}/{len(edges)}]",
-                )
-            )
-
-        log_write(f"[{key}] rubric")
-        pm_score = mean(score["score"] for score in edge_scores) if edge_scores else 0.0
-        rubric_score = eval_rubric(client, judge_model, question, item.get("rubrics", {}), model_answer)
-        rm_score = rubric_score["score"]
-
-        om_score: float | None = None
-        if answer_type == "closed":
-            log_write(f"[{key}] om")
-            gold = safe_get_first_answer(item)
-            if gold is None:
-                raise ValueError(f"Closed item {key} has no gold answer")
-            om_score = eval_outcome(client, judge_model, question, gold, model_answer)["score"]
-
-        available = [pm_score, rm_score] + ([om_score] if om_score is not None else [])
-        total_score = mean(available)
-        completed_items[key] = {
-            **item,
-            "model_answer": model_answer,
-            "pm_score": pm_score,
-            "rm_score": rm_score,
-            "om_score": om_score,
-            "total_score": total_score,
-            "parsed_rst_raw": rst_record.get("raw_output"),
-            "parsed_rst": rst_record,
-            "parsed_rst_source": rst_record.get("source"),
-            "parsed_rst_error": rst_record.get("error"),
-            "parsed_dag": graph,
-            "parsed_dag_source": graph_record["source"],
-            "parsed_dag_error": graph_record["error"],
-            "metrics": {
-                "pm": {"score": pm_score, "edges": edge_scores, "graph": graph},
-                "rm": rubric_score,
-                "om": None if om_score is None else {"score": om_score},
-            },
-        }
-
-        ordered_items = [completed_items[item_key(b)] for b in benchmark if item_key(b) in completed_items]
-        payload = {
-            "meta": {
-                "task": "evaluator",
-                "answer_model": answer_model,
-                "judge_model": judge_model,
-                "parser_model": parser_model,
-                "timestamp": timestamp,
-                "source_benchmark": str(resolve_input_path(benchmark_path)),
-                "source_answers": str(answer_file),
-                "count": len(ordered_items),
-                "status": "partial" if len(ordered_items) < len(benchmark) else "complete",
-            },
-            "summary": build_summary(ordered_items),
-            "items": ordered_items,
-        }
+        pending_items.append((index, item))
+    if not pending_items:
+        payload = build_checkpoint_payload(
+            benchmark,
+            completed_items,
+            failed_items,
+            answer_model,
+            judge_model,
+            parser_model,
+            timestamp,
+            benchmark_path,
+            answer_file,
+            concurrency,
+        )
+        if payload["meta"]["status"] == "complete":
+            log_write(f"eval:{judge_model} | skip (already complete)")
         write_checkpoint(out_file, payload)
+        return out_file
 
-    ordered_items = [completed_items[item_key(b)] for b in benchmark if item_key(b) in completed_items]
-    payload = {
-        "meta": {
-            "task": "evaluator",
-            "answer_model": answer_model,
-            "judge_model": judge_model,
-            "parser_model": parser_model,
-            "timestamp": timestamp,
-            "source_benchmark": str(resolve_input_path(benchmark_path)),
-            "source_answers": str(answer_file),
-            "count": len(ordered_items),
-            "status": "complete" if len(ordered_items) == len(benchmark) else "partial",
-        },
-        "summary": build_summary(ordered_items),
-        "items": ordered_items,
-    }
+    def finish_item(index: int, item: dict[str, Any]) -> None:
+        key = item_key(item)
+        try:
+            completed_items[key] = evaluate_item(
+                client,
+                item,
+                answer_map.get(key),
+                judge_model,
+                parser_model,
+                index,
+                total_items,
+            )
+            failed_items.pop(key, None)
+        except Exception as exc:
+            failed_items[key] = build_failure_item(item, exc)
+            log_write(f"[{index}/{total_items}] {key} | failed: {exc}")
+
+    if concurrency == 1:
+        progress = tqdm(pending_items, desc=f"eval:{judge_model}", unit="item")
+        update_progress(
+            progress,
+            build_progress_state(
+                total_items,
+                build_ordered_items(benchmark, completed_items),
+                build_ordered_items(benchmark, failed_items),
+            ),
+        )
+        for index, item in progress:
+            finish_item(index, item)
+            payload = build_checkpoint_payload(
+                benchmark,
+                completed_items,
+                failed_items,
+                answer_model,
+                judge_model,
+                parser_model,
+                timestamp,
+                benchmark_path,
+                answer_file,
+                concurrency,
+            )
+            write_checkpoint(out_file, payload)
+            update_progress(progress, payload["state"])
+    else:
+        with ThreadPoolExecutor(max_workers=concurrency) as executor:
+            futures = {
+                executor.submit(
+                    evaluate_item,
+                    client,
+                    item,
+                    answer_map.get(item_key(item)),
+                    judge_model,
+                    parser_model,
+                    index,
+                    total_items,
+                ): (index, item)
+                for index, item in pending_items
+            }
+            progress = tqdm(as_completed(futures), total=len(futures), desc=f"eval:{judge_model}", unit="item")
+            update_progress(
+                progress,
+                build_progress_state(
+                    total_items,
+                    build_ordered_items(benchmark, completed_items),
+                    build_ordered_items(benchmark, failed_items),
+                ),
+            )
+            for future in progress:
+                index, item = futures[future]
+                key = item_key(item)
+                try:
+                    completed_items[key] = future.result()
+                    failed_items.pop(key, None)
+                except Exception as exc:
+                    failed_items[key] = build_failure_item(item, exc)
+                    log_write(f"[{index}/{total_items}] {key} | failed: {exc}")
+                payload = build_checkpoint_payload(
+                    benchmark,
+                    completed_items,
+                    failed_items,
+                    answer_model,
+                    judge_model,
+                    parser_model,
+                    timestamp,
+                    benchmark_path,
+                    answer_file,
+                    concurrency,
+                )
+                write_checkpoint(out_file, payload)
+                update_progress(progress, payload["state"])
+
+    payload = build_checkpoint_payload(
+        benchmark,
+        completed_items,
+        failed_items,
+        answer_model,
+        judge_model,
+        parser_model,
+        timestamp,
+        benchmark_path,
+        answer_file,
+        concurrency,
+    )
     write_checkpoint(out_file, payload)
     return out_file

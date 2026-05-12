@@ -8,6 +8,7 @@ BASE_URL="${BASE_URL:-https://openrouter.ai/api/v1}"
 ANSWERS_FILE="${1:-}"
 JUDGE_MODEL="${2:-}"
 PARSER_MODEL="${3:-${JUDGE_MODEL}}"
+CONCURRENCY="${4:-${CONCURRENCY:-1}}"
 
 if [[ -z "${API_KEY}" ]]; then
   echo "Set OPENROUTER_API_KEY or API_KEY." >&2
@@ -15,7 +16,7 @@ if [[ -z "${API_KEY}" ]]; then
 fi
 
 if [[ -z "${ANSWERS_FILE}" || -z "${JUDGE_MODEL}" ]]; then
-  echo "Usage: scripts/evaluate_metrics.sh ANSWERS_FILE JUDGE_MODEL [PARSER_MODEL]" >&2
+  echo "Usage: scripts/evaluate_metrics.sh ANSWERS_FILE JUDGE_MODEL [PARSER_MODEL] [CONCURRENCY]" >&2
   exit 1
 fi
 
@@ -27,4 +28,5 @@ python3 "${ROOT_DIR}/code/src/main.py" \
   --answers "${ANSWERS_FILE}" \
   --judge-model "${JUDGE_MODEL}" \
   --parser-model "${PARSER_MODEL}" \
-  --output-dir "result"
+  --output-dir "result" \
+  --concurrency "${CONCURRENCY}"

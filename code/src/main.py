@@ -43,6 +43,7 @@ def build_parser() -> argparse.ArgumentParser:
     eval_cmd.add_argument("--judge-model", required=True)
     eval_cmd.add_argument("--parser-model", default=None)
     eval_cmd.add_argument("--output-dir", default="result")
+    eval_cmd.add_argument("--concurrency", type=int, default=1)
 
     return parser
 
@@ -87,6 +88,7 @@ def main() -> int:
             judge_model=args.judge_model,
             parser_model=parser_model,
             output_dir=args.output_dir,
+            concurrency=args.concurrency,
         )
         print(out)
         return 0

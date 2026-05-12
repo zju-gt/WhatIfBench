@@ -1,9 +1,18 @@
 from __future__ import annotations
 
 import json
+import sys
+import threading
+import time
 from pathlib import Path
 
 from src.evaluator import evaluate, parse_graph_record
+
+SRC_ROOT = Path(__file__).resolve().parents[1] / "src"
+if str(SRC_ROOT) not in sys.path:
+    sys.path.insert(0, str(SRC_ROOT))
+
+from main import build_parser
 
 
 class FakeClient:
@@ -179,8 +188,106 @@ ROOT[1-2]
     )
 
     payload = json.loads(out.read_text())
-    assert payload["meta"]["status"] == "partial"
+    assert payload["meta"]["status"] == "complete"
     assert payload["meta"]["count"] == 1
+    assert payload["meta"]["failure_count"] == 1
+    assert payload["state"] == {
+        "total": 2,
+        "processed": 2,
+        "succeeded": 1,
+        "failed": 1,
+        "pending": 0,
+        "mean_score": 1.0,
+    }
     assert payload["summary"]["n_items"] == 1
+    assert payload["failures"][0]["canonical_id"] == "q0001"
+    assert payload["failures"][0]["evaluation_status"] == "failed"
     assert [item["canonical_id"] for item in payload["items"]] == ["q0002"]
     assert client.calls == 3
+
+
+def test_evaluate_runs_items_with_configured_concurrency(tmp_path: Path):
+    benchmark = tmp_path / "benchmark.json"
+    answers = tmp_path / "answers.json"
+    result_dir = tmp_path / "result"
+    result_dir.mkdir()
+
+    items = [_item(1), _item(2)]
+    for item in items:
+        item["rubrics"] = {"criteria": []}
+    benchmark.write_text(json.dumps({"items": items}, ensure_ascii=False, indent=2))
+    answers.write_text(
+        json.dumps(
+            {
+                "meta": {"model": "test-model"},
+                "items": [
+                    {**items[0], "model_answer": "single sentence"},
+                    {**items[1], "model_answer": "single sentence"},
+                ],
+            },
+            ensure_ascii=False,
+            indent=2,
+        )
+    )
+
+    class SlowClient:
+        def __init__(self):
+            self.active = 0
+            self.max_active = 0
+            self.calls = 0
+            self.lock = threading.Lock()
+
+        def chat_completion(self, **kwargs):
+            with self.lock:
+                self.active += 1
+                self.max_active = max(self.max_active, self.active)
+                self.calls += 1
+            try:
+                time.sleep(0.05)
+                if kwargs["messages"][0]["content"] == "Return JSON only.":
+                    return '{"score": 1, "rationale": "ok"}'
+                return """EDUs:
+EDU1: single sentence
+
+RST ANALYSIS:
+
+TREE STRUCTURE:
+ROOT[1]
+"""
+            finally:
+                with self.lock:
+                    self.active -= 1
+
+    client = SlowClient()
+    out = evaluate(
+        client=client,
+        benchmark_path=str(benchmark),
+        answer_path=str(answers),
+        judge_model="test/model",
+        parser_model="test/model",
+        output_dir=str(result_dir),
+        concurrency=2,
+    )
+
+    payload = json.loads(out.read_text())
+    assert client.calls == 4
+    assert client.max_active >= 2
+    assert payload["state"]["succeeded"] == 2
+    assert payload["state"]["failed"] == 0
+
+
+def test_evaluate_parser_accepts_concurrency():
+    parser = build_parser()
+    args = parser.parse_args(
+        [
+            "evaluate",
+            "--answers",
+            "answers.json",
+            "--judge-model",
+            "judge",
+            "--concurrency",
+            "32",
+        ]
+    )
+
+    assert args.concurrency == 32
