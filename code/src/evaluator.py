@@ -84,18 +84,23 @@ def parse_graph_record(
 
 def judge_edge_messages(question: str, source: str, target: str, relation_type: str, answer: str) -> list[dict[str, str]]:
     user = f"""
-You are an extremely strict judge of one extracted discourse edge in a counterfactual answer.
+You are an adversarially strict judge of one extracted discourse edge in a counterfactual answer.
 Answer with only one token: yes or no.
 
 Judge only whether the full answer explicitly supports this exact directed relation:
 source claim -> target claim with relation type = {relation_type}.
 
-Use this conservative standard:
-- Say yes only if both claims are present or unambiguously paraphrased in the answer, and the answer clearly links the source to the target with the stated relation.
-- Say no if the edge is merely plausible, world-knowledge-supported, implied by the question, or inferable only by filling gaps yourself.
-- Say no if the answer mentions both claims but does not clearly connect them in the stated direction.
-- Say no if the relation type is too strong, too specific, reversed, contradicted, or only weakly hinted at.
-- Do not reward fluent prose, general relevance, or broad topical overlap.
+Default to no. Say yes only when the answer contains enough local textual evidence for this exact edge.
+
+Strict decision rules:
+- Say yes only if both claims are explicitly stated or unambiguously paraphrased in nearby parts of the answer.
+- Say yes only if the answer itself makes the source-to-target link clear; the link must not require outside knowledge, reconstruction, or charitable interpretation.
+- Say yes only if the relation type is appropriate at the requested strength. For CAUSE/RESULT/CONSEQUENCE, the answer must express an actual causal or consequential dependency, not just sequence or topic association.
+- Say no if the answer merely makes the edge plausible, mentions both claims separately, or leaves the relation implicit.
+- Say no if the edge is supported only by the question, historical/common knowledge, or what would normally be true in the domain.
+- Say no if directionality is ambiguous, reversed, circular, too broad, too specific, or partially contradicted.
+- Say no if either claim is vague in the extracted edge and the answer does not pin it down clearly.
+- Do not reward fluent prose, answer length, topical relevance, or broad scenario coherence.
 
 Question:
 {question}
@@ -109,33 +114,43 @@ Target claim:
 Relation type:
 {relation_type}
 
-Full answer:
+Full answer to inspect:
 {answer}
 """
-    return [{"role": "system", "content": "Reply with only yes or no."}, {"role": "user", "content": user.strip()}]
+    return [{"role": "system", "content": "Default to no. Reply with only yes or no."}, {"role": "user", "content": user.strip()}]
 
 
 def rubric_messages(question: str, rubric: Any, answer: str) -> list[dict[str, str]]:
     user = f"""
-You are an extremely strict rubric judge for counterfactual long-range reasoning.
+You are an adversarially strict rubric judge for counterfactual long-range reasoning.
 Return JSON only with keys score and rationale.
 
 Score from 0 to 1 and judge the answer against the rubric.
 
-Use a conservative grading scale:
-- 0.90-1.00: exceptional; satisfies nearly every rubric requirement with precise causal detail and no important errors.
-- 0.75-0.89: strong; mostly satisfies the rubric but has minor omissions, shallow links, or limited uncertainty handling.
-- 0.55-0.74: adequate; partially satisfies the rubric but misses important mechanisms, consequences, or constraints.
-- 0.30-0.54: weak; generic, incomplete, or only loosely tied to the counterfactual premise.
-- 0.00-0.29: poor; contradicts the premise, is mostly unsupported, or fails the rubric.
+Use this strict grading scale:
+- 0.95-1.00: rare expert-level answer; nearly complete, precise, well constrained, and free of material gaps.
+- 0.85-0.94: very strong; detailed and criterion-specific, with only minor omissions.
+- 0.70-0.84: good but incomplete; solid reasoning with noticeable missing mechanisms, constraints, or downstream effects.
+- 0.50-0.69: middling; broadly relevant but shallow, generic, or uneven.
+- 0.30-0.49: weak; thin, mostly descriptive, under-justified, or loosely tied to the premise.
+- 0.00-0.29: poor; wrong, contradictory, mostly unsupported, or fails the rubric.
 
 Rules:
 - Grade evidence actually present in the answer, not what a knowledgeable reader could infer.
 - Penalize generic alternate-history summaries, unsupported leaps, missing long-range consequences, and lack of mechanism detail.
 - Penalize confident claims that ignore uncertainty or historical/domain constraints.
 - Do not give a high score for fluency, length, or topical relevance alone.
-- If the answer is correct only at a high level but shallow, the score should usually be at most 0.65.
-- If it misses a major rubric dimension, the score should usually be at most 0.75.
+- If uncertain between two scores, choose the lower one.
+- A merely plausible answer is not a strong answer; reward explicit reasoning, not plausibility.
+
+Hard caps:
+- If the answer does not directly address the exact counterfactual premise, score at most 0.45.
+- If the answer is mostly generic background or a high-level summary, score at most 0.55.
+- If the answer gives conclusions without explaining mechanisms, score at most 0.60.
+- If it misses one major rubric dimension, score at most 0.70.
+- If it contains a serious contradiction, premise drift, or major factual/domain error, score at most 0.60.
+- If it is overconfident about speculative branches without qualification, score at most 0.75.
+- Give 0.85 or above only when the answer has concrete, question-specific mechanisms, multiple downstream consequences, constraint awareness, and no major omissions.
 
 Question:
 {question}
@@ -152,7 +167,7 @@ Answer:
 def criterion_score_messages(question: str, criterion: dict[str, Any], answer: str) -> list[dict[str, str]]:
     criterion_json = json.dumps(criterion, ensure_ascii=False, indent=2)
     user = f"""
-You are an extremely strict evaluator of one query-dependent criterion for a counterfactual long-range reasoning task.
+You are an adversarially strict evaluator of one query-dependent criterion for a counterfactual long-range reasoning task.
 Score from 1 to 10 using the criterion's own band definitions.
 Return JSON only with keys score and reason.
 
@@ -169,16 +184,25 @@ Rules:
 - Select one integer score from 1 to 10.
 - Follow the criterion's 1-2 / 3-4 / 5-6 / 7-8 / 9-10 descriptions.
 - Grade only what is explicitly present or unambiguously paraphrased in the answer.
-- Treat 5 as the default for a partially relevant but shallow answer; move upward only for concrete evidence.
-- Scores 9-10 require outstanding, criterion-specific coverage with precise mechanisms, long-range implications, constraints, and no serious gaps.
-- Scores 7-8 require strong criterion-specific reasoning, but still allow minor omissions or minor uncertainty issues.
-- Scores 5-6 mean the answer addresses the criterion in a basic or uneven way but lacks depth, coverage, or grounding.
-- Scores 3-4 mean the answer is mostly generic, underdeveloped, or weakly connected to the criterion.
+- Start from 5 for a relevant but shallow answer. Move up only for concrete, criterion-specific evidence; move down for omissions or unsupported claims.
+- Scores 9-10 are rare. They require expert-level, criterion-specific coverage with precise mechanisms, long-range implications, constraints, uncertainty calibration, and no serious gaps.
+- Scores 7-8 require strong explicit reasoning for this criterion, with concrete examples and only minor gaps.
+- Scores 5-6 mean the answer addresses the criterion in a basic, generic, or uneven way but lacks depth, coverage, or grounding.
+- Scores 3-4 mean the answer is mostly generic, thin, underdeveloped, or only tangentially connected to the criterion.
 - Scores 1-2 mean the answer ignores, contradicts, or seriously mishandles the criterion.
 - Penalize unsupported causal leaps, missing major consequences, premise drift, contradictions, overconfidence, and vague lists of outcomes.
 - Do not reward fluency, length, or broad topical relevance unless the criterion is actually satisfied.
-- If the answer only states a plausible conclusion without explaining mechanisms, score at most 6.
-- If the answer misses a central element named in the criterion, score at most 7 even if the rest is good.
+- If uncertain between two bands, choose the lower band.
+
+Hard caps:
+- If the answer does not directly engage this criterion, score at most 4.
+- If the answer only states a plausible conclusion without explaining mechanisms, score at most 5.
+- If the answer is mostly generic or could apply to many similar counterfactuals, score at most 5.
+- If the answer misses a central element named in the criterion, score at most 6 even if the rest is good.
+- If the answer lacks long-range downstream reasoning where the criterion asks for it, score at most 6.
+- If the answer ignores important constraints or uncertainty where relevant, score at most 7.
+- If the answer contains a serious contradiction, premise drift, or major factual/domain error, score at most 5.
+- Give 8 only for clearly strong criterion satisfaction; give 9-10 only for exceptional, expert-level satisfaction.
 """
     return [{"role": "system", "content": "Return JSON only."}, {"role": "user", "content": user.strip()}]
 
