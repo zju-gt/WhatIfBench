@@ -84,10 +84,18 @@ def parse_graph_record(
 
 def judge_edge_messages(question: str, source: str, target: str, relation_type: str, answer: str) -> list[dict[str, str]]:
     user = f"""
-You are a strict judge of a single discourse edge in a counterfactual answer.
+You are an extremely strict judge of one extracted discourse edge in a counterfactual answer.
 Answer with only one token: yes or no.
-Say yes if the stated relation from source to target is supported by the answer text.
-Say no otherwise.
+
+Judge only whether the full answer explicitly supports this exact directed relation:
+source claim -> target claim with relation type = {relation_type}.
+
+Use this conservative standard:
+- Say yes only if both claims are present or unambiguously paraphrased in the answer, and the answer clearly links the source to the target with the stated relation.
+- Say no if the edge is merely plausible, world-knowledge-supported, implied by the question, or inferable only by filling gaps yourself.
+- Say no if the answer mentions both claims but does not clearly connect them in the stated direction.
+- Say no if the relation type is too strong, too specific, reversed, contradicted, or only weakly hinted at.
+- Do not reward fluent prose, general relevance, or broad topical overlap.
 
 Question:
 {question}
@@ -109,10 +117,25 @@ Full answer:
 
 def rubric_messages(question: str, rubric: Any, answer: str) -> list[dict[str, str]]:
     user = f"""
-You are a strict rubric judge.
+You are an extremely strict rubric judge for counterfactual long-range reasoning.
 Return JSON only with keys score and rationale.
 
 Score from 0 to 1 and judge the answer against the rubric.
+
+Use a conservative grading scale:
+- 0.90-1.00: exceptional; satisfies nearly every rubric requirement with precise causal detail and no important errors.
+- 0.75-0.89: strong; mostly satisfies the rubric but has minor omissions, shallow links, or limited uncertainty handling.
+- 0.55-0.74: adequate; partially satisfies the rubric but misses important mechanisms, consequences, or constraints.
+- 0.30-0.54: weak; generic, incomplete, or only loosely tied to the counterfactual premise.
+- 0.00-0.29: poor; contradicts the premise, is mostly unsupported, or fails the rubric.
+
+Rules:
+- Grade evidence actually present in the answer, not what a knowledgeable reader could infer.
+- Penalize generic alternate-history summaries, unsupported leaps, missing long-range consequences, and lack of mechanism detail.
+- Penalize confident claims that ignore uncertainty or historical/domain constraints.
+- Do not give a high score for fluency, length, or topical relevance alone.
+- If the answer is correct only at a high level but shallow, the score should usually be at most 0.65.
+- If it misses a major rubric dimension, the score should usually be at most 0.75.
 
 Question:
 {question}
@@ -129,7 +152,7 @@ Answer:
 def criterion_score_messages(question: str, criterion: dict[str, Any], answer: str) -> list[dict[str, str]]:
     criterion_json = json.dumps(criterion, ensure_ascii=False, indent=2)
     user = f"""
-You are evaluating one query-dependent criterion for a counterfactual long-range reasoning task.
+You are an extremely strict evaluator of one query-dependent criterion for a counterfactual long-range reasoning task.
 Score from 1 to 10 using the criterion's own band definitions.
 Return JSON only with keys score and reason.
 
@@ -145,8 +168,17 @@ Answer:
 Rules:
 - Select one integer score from 1 to 10.
 - Follow the criterion's 1-2 / 3-4 / 5-6 / 7-8 / 9-10 descriptions.
-- Reward causal fidelity, mechanism depth, and long-range coherence when explicitly present.
-- Penalize contradictions, unsupported leaps, and missing major consequences.
+- Grade only what is explicitly present or unambiguously paraphrased in the answer.
+- Treat 5 as the default for a partially relevant but shallow answer; move upward only for concrete evidence.
+- Scores 9-10 require outstanding, criterion-specific coverage with precise mechanisms, long-range implications, constraints, and no serious gaps.
+- Scores 7-8 require strong criterion-specific reasoning, but still allow minor omissions or minor uncertainty issues.
+- Scores 5-6 mean the answer addresses the criterion in a basic or uneven way but lacks depth, coverage, or grounding.
+- Scores 3-4 mean the answer is mostly generic, underdeveloped, or weakly connected to the criterion.
+- Scores 1-2 mean the answer ignores, contradicts, or seriously mishandles the criterion.
+- Penalize unsupported causal leaps, missing major consequences, premise drift, contradictions, overconfidence, and vague lists of outcomes.
+- Do not reward fluency, length, or broad topical relevance unless the criterion is actually satisfied.
+- If the answer only states a plausible conclusion without explaining mechanisms, score at most 6.
+- If the answer misses a central element named in the criterion, score at most 7 even if the rest is good.
 """
     return [{"role": "system", "content": "Return JSON only."}, {"role": "user", "content": user.strip()}]
 
