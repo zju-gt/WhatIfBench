@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import json
+import threading
+import time
 from pathlib import Path
 
 from src.runner import run
@@ -14,6 +16,24 @@ class FakeClient:
     def chat_completion(self, **kwargs):
         self.calls += 1
         return self.outputs.pop(0)
+
+
+class TrackingClient:
+    def __init__(self):
+        self.calls = 0
+        self.active = 0
+        self.max_active = 0
+        self.lock = threading.Lock()
+
+    def chat_completion(self, **kwargs):
+        with self.lock:
+            self.calls += 1
+            self.active += 1
+            self.max_active = max(self.max_active, self.active)
+        time.sleep(0.05)
+        with self.lock:
+            self.active -= 1
+        return "answer"
 
 
 def _item(i: int) -> dict:
@@ -66,3 +86,23 @@ def test_run_resumes_and_rewrites_same_file(tmp_path: Path):
     assert payload["items"][2]["model_answer"] == "A3"
     assert client.calls == 2
 
+
+def test_run_uses_concurrency(tmp_path: Path):
+    dataset = tmp_path / "dataset.json"
+    out_dir = tmp_path / "result"
+    items = [_item(1), _item(2), _item(3), _item(4)]
+    dataset.write_text(json.dumps(items, ensure_ascii=False, indent=2))
+
+    client = TrackingClient()
+    run(
+        client=client,
+        dataset_path=str(dataset),
+        model="test-model",
+        output_dir=str(out_dir),
+        concurrency=2,
+    )
+
+    payload = json.loads((out_dir / "test-model.json").read_text())
+    assert payload["meta"]["concurrency"] == 2
+    assert client.calls == 4
+    assert client.max_active > 1

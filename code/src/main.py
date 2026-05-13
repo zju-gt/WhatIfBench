@@ -29,6 +29,7 @@ def build_parser() -> argparse.ArgumentParser:
     run_cmd.add_argument("--temperature", type=float, default=0.6)
     run_cmd.add_argument("--max-tokens", type=int, default=4096)
     run_cmd.add_argument("--limit", type=int, default=None)
+    run_cmd.add_argument("--concurrency", type=int, default=1)
 
     rub_cmd = sub.add_parser("rubrics", help="Generate rubrics for the benchmark", parents=[common])
     rub_cmd.add_argument("--benchmark", default="data/benchmark_candidates.json")
@@ -37,6 +38,7 @@ def build_parser() -> argparse.ArgumentParser:
     rub_cmd.add_argument("--temperature", type=float, default=0.6)
     rub_cmd.add_argument("--max-tokens", type=int, default=4096)
     rub_cmd.add_argument("--limit", type=int, default=None)
+    rub_cmd.add_argument("--concurrency", type=int, default=1)
 
     eval_cmd = sub.add_parser("evaluate", help="Evaluate answers with rubrics and gold answers", parents=[common])
     eval_cmd.add_argument("--benchmark", default="data/benchmark_candidates_with_rubrics.json")
@@ -63,6 +65,7 @@ def main() -> int:
             temperature=args.temperature,
             max_tokens=args.max_tokens,
             limit=args.limit,
+            concurrency=args.concurrency,
         )
         print(out)
         return 0
@@ -76,6 +79,7 @@ def main() -> int:
             temperature=args.temperature,
             max_tokens=args.max_tokens,
             limit=args.limit,
+            concurrency=args.concurrency,
         )
         print(out)
         return 0

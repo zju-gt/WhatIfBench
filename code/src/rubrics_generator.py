@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import time
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 from typing import Any
 
@@ -168,6 +169,27 @@ def generate_single_rubric(
     raise RuntimeError(f"Failed to generate rubric after {MAX_ATTEMPTS} attempts: {last_error}")
 
 
+def build_output_payload(
+    items: list[dict[str, Any]],
+    output_map: dict[str, dict[str, Any]],
+    model: str,
+    timestamp: str,
+    benchmark_path: str,
+    concurrency: int,
+) -> dict[str, Any]:
+    return {
+        "meta": {
+            "task": "rubrics_generator",
+            "model": model,
+            "timestamp": timestamp,
+            "source_benchmark": str(resolve_input_path(benchmark_path)),
+            "count": len(output_map),
+            "concurrency": concurrency,
+        },
+        "items": [output_map[item_key(x)] for x in items if item_key(x) in output_map],
+    }
+
+
 def generate(
     client: OpenAICompatibleClient,
     benchmark_path: str,
@@ -176,7 +198,9 @@ def generate(
     temperature: float = 0.6,
     max_tokens: int = 8192,
     limit: int | None = None,
+    concurrency: int = 1,
 ) -> Path:
+    concurrency = max(1, int(concurrency))
     dataset = read_json(resolve_input_path(benchmark_path))
     items = dataset[:limit] if limit is not None else dataset
     out_file = resolve_output_path(output_path)
@@ -204,39 +228,30 @@ def generate(
         else utc_timestamp()
     )
 
-    for item in tqdm(items, desc=f"rubrics:{model}", unit="item"):
-        key = item_key(item)
-        if key not in output_map:
-            rubric = generate_single_rubric(
-                client=client,
-                model=model,
-                item=item,
-                temperature=temperature,
-                max_tokens=max_tokens,
-            )
-            output_map[key] = {**item, "rubrics": rubric}
-            payload = {
-                "meta": {
-                    "task": "rubrics_generator",
-                    "model": model,
-                    "timestamp": timestamp,
-                    "source_benchmark": str(resolve_input_path(benchmark_path)),
-                    "count": len(output_map),
-                },
-                "items": [output_map[item_key(x)] for x in items if item_key(x) in output_map],
-            }
-            write_json(out_file, payload)
+    pending_items = [item for item in items if item_key(item) not in output_map]
 
-    payload = {
-        "meta": {
-            "task": "rubrics_generator",
-            "model": model,
-            "timestamp": timestamp,
-            "source_benchmark": str(resolve_input_path(benchmark_path)),
-            "count": len(output_map),
-        },
-        "items": [output_map[item_key(x)] for x in items if item_key(x) in output_map],
-    }
+    def generate_item(item: dict[str, Any]) -> dict[str, Any]:
+        rubric = generate_single_rubric(
+            client=client,
+            model=model,
+            item=item,
+            temperature=temperature,
+            max_tokens=max_tokens,
+        )
+        return {**item, "rubrics": rubric}
 
+    if concurrency == 1:
+        for item in tqdm(pending_items, desc=f"rubrics:{model}", unit="item"):
+            output_map[item_key(item)] = generate_item(item)
+            write_json(out_file, build_output_payload(items, output_map, model, timestamp, benchmark_path, concurrency))
+    else:
+        with ThreadPoolExecutor(max_workers=concurrency) as executor:
+            futures = {executor.submit(generate_item, item): item for item in pending_items}
+            for future in tqdm(as_completed(futures), total=len(futures), desc=f"rubrics:{model}", unit="item"):
+                item = futures[future]
+                output_map[item_key(item)] = future.result()
+                write_json(out_file, build_output_payload(items, output_map, model, timestamp, benchmark_path, concurrency))
+
+    payload = build_output_payload(items, output_map, model, timestamp, benchmark_path, concurrency)
     write_json(out_file, payload)
     return out_file

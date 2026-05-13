@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import json
+import threading
+import time
 from pathlib import Path
 
 from src.rubrics_generator import generate
@@ -14,6 +16,26 @@ class FakeClient:
     def chat_completion(self, **kwargs):
         self.calls += 1
         return self.outputs.pop(0)
+
+
+class TrackingClient:
+    def __init__(self):
+        self.calls = 0
+        self.active = 0
+        self.max_active = 0
+        self.lock = threading.Lock()
+
+    def chat_completion(self, **kwargs):
+        with self.lock:
+            self.calls += 1
+            self.active += 1
+            self.max_active = max(self.max_active, self.active)
+        time.sleep(0.05)
+        with self.lock:
+            self.active -= 1
+        return """[
+          {"name":"criterion","criteria_description":"desc","1-2":"a","3-4":"b","5-6":"c","7-8":"d","9-10":"e"}
+        ]"""
 
 
 def _make_item(i: int) -> dict:
@@ -70,3 +92,24 @@ def test_generate_resumes_from_existing_output(tmp_path: Path):
     assert payload["items"][1]["rubrics"]["criteria"][0]["name"] == "criterion_a"
     assert payload["items"][2]["rubrics"]["criteria"][0]["name"] == "criterion_b"
     assert client.calls == 2
+
+
+def test_generate_uses_concurrency(tmp_path: Path):
+    benchmark = tmp_path / "benchmark.json"
+    output = tmp_path / "rubrics.json"
+    items = [_make_item(1), _make_item(2), _make_item(3), _make_item(4)]
+    benchmark.write_text(json.dumps(items, ensure_ascii=False, indent=2))
+
+    client = TrackingClient()
+    generate(
+        client=client,
+        benchmark_path=str(benchmark),
+        model="test-model",
+        output_path=str(output),
+        concurrency=2,
+    )
+
+    payload = json.loads(output.read_text())
+    assert payload["meta"]["concurrency"] == 2
+    assert client.calls == 4
+    assert client.max_active > 1
