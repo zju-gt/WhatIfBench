@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
 OPENROUTER_API_KEY="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"
+MODELROUTER_API_KEY="sk-9eba1adb38fa4cb1af5dca05f58f8472"
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-API_SOURCE="${API_SOURCE:-openrouter}"
+API_SOURCE="${API_SOURCE:-modelrouter}"
 if [[ "${API_SOURCE}" == "modelrouter" ]]; then
   API_KEY="${API_KEY:-${MODELROUTER_API_KEY:-${LLM_API_KEY:-${OPENAI_API_KEY:-}}}}"
   BASE_URL="${BASE_URL:-${MODELROUTER_BASE_URL:-${LLM_BASE_URL:-https://routify.alibaba-inc.com/protocol/openai/v1}}}"
@@ -12,9 +13,9 @@ else
   BASE_URL="${BASE_URL:-https://openrouter.ai/api/v1}"
 fi
 ANSWERS_FILE="${1:-}"
-JUDGE_MODEL="${2:-}"
+JUDGE_MODEL="${2:-"gpt-5.2-chat-latest"}"
 PARSER_MODEL="${3:-${JUDGE_MODEL}}"
-CONCURRENCY="${4:-${CONCURRENCY:-1}}"
+CONCURRENCY="${4:-${CONCURRENCY:-16}}"
 
 if [[ -z "${API_KEY}" ]]; then
   if [[ "${API_SOURCE}" == "modelrouter" ]]; then
