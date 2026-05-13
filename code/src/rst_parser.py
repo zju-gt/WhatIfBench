@@ -288,7 +288,7 @@ def parse_rst_record(
             messages=build_parser_messages(answer),
             temperature=0.0,
             max_tokens=PARSER_MAX_TOKENS,
-            extra_body=PARSER_EXTRA_BODY,
+            # extra_body=PARSER_EXTRA_BODY,
         )
         if not raw:
             raise ValueError("Empty parser output")
