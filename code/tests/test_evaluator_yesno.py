@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from src import evaluator
-from src.evaluator import judge_edge_messages, judge_yes_no
+from src.evaluator import compute_pm_score, judge_edge_messages, judge_yes_no
 
 
 class FakeClient:
@@ -33,6 +33,32 @@ def test_judge_edge_messages_includes_relation_type():
     messages = judge_edge_messages("q", "a", "b", "CAUSE", "full answer")
     assert "Relation type:" in messages[1]["content"]
     assert "CAUSE" in messages[1]["content"]
+
+
+def test_compute_pm_score_uses_only_causal_relation_types():
+    graph = {
+        "edges": [
+            {"relation_type": "BACKGROUND"},
+            {"relation_type": "CAUSE"},
+            {"relation_type": "CONSEQUENCE"},
+            {"relation_type": "ELABORATION"},
+        ]
+    }
+    edge_scores = [
+        {"score": 1.0},
+        {"score": 0.0},
+        {"score": 1.0},
+        {"score": 1.0},
+    ]
+
+    assert compute_pm_score(graph, edge_scores) == 0.5
+
+
+def test_compute_pm_score_returns_zero_without_causal_relation_types():
+    graph = {"edges": [{"relation_type": "BACKGROUND"}, {"relation_type": "ELABORATION"}]}
+    edge_scores = [{"score": 1.0}, {"score": 1.0}]
+
+    assert compute_pm_score(graph, edge_scores) == 0.0
 
 
 def test_judge_yes_no_uses_larger_max_tokens():

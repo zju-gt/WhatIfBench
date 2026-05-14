@@ -60,6 +60,7 @@ OM_RETRIES = 2
 PM_MAX_TOKENS = 1028
 RM_MAX_TOKENS = 4096
 DEFAULT_JSON_MAX_TOKENS = 256
+CAUSAL_PM_RELATION_TYPES = {"CAUSE", "CONDITION", "RESULT", "CONSEQUENCE"}
 
 
 def parse_graph_record(
@@ -329,6 +330,16 @@ def eval_edge(
     )
     score = clamp(coerce_float(parsed.get("score", 0.0), 0.0), 0.0, 1.0)
     return {"score": score, "rationale": "", "raw": parsed}
+
+
+def compute_pm_score(graph: dict[str, Any], edge_scores: list[dict[str, Any]]) -> float:
+    causal_scores: list[float] = []
+    for edge, edge_score in zip(graph.get("edges", []), edge_scores):
+        relation_type = str(edge.get("relation_type", edge.get("type", ""))).upper()
+        if relation_type not in CAUSAL_PM_RELATION_TYPES:
+            continue
+        causal_scores.append(clamp(coerce_float(edge_score.get("score", 0.0), 0.0), 0.0, 1.0))
+    return mean(causal_scores) if causal_scores else 0.0
 
 
 def eval_rubric(
@@ -649,7 +660,7 @@ def evaluate_item(
         )
 
     log_write(f"[{key}] rubric")
-    pm_score = mean(score["score"] for score in edge_scores) if edge_scores else 0.0
+    pm_score = compute_pm_score(graph, edge_scores)
     rubric_score = eval_rubric(client, judge_model, question, item.get("rubrics", {}), model_answer)
     rm_score = rubric_score["score"]
 

@@ -197,7 +197,7 @@ ROOT[1-2]
         "succeeded": 1,
         "failed": 1,
         "pending": 0,
-        "mean_score": 1.0,
+        "mean_score": 0.5,
     }
     assert payload["summary"]["n_items"] == 1
     assert payload["failures"][0]["canonical_id"] == "q0001"
