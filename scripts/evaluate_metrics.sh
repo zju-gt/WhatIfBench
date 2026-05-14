@@ -13,7 +13,7 @@ else
   BASE_URL="${BASE_URL:-https://openrouter.ai/api/v1}"
 fi
 ANSWERS_FILE="${1:-}"
-JUDGE_MODEL="${2:-"gpt-5.2-chat-latest"}"
+JUDGE_MODEL="${2:-"gpt-5.5"}"
 PARSER_MODEL="${3:-${JUDGE_MODEL}}"
 CONCURRENCY="${4:-${CONCURRENCY:-16}}"
 

@@ -11,7 +11,7 @@ else
   API_KEY="${API_KEY:-${OPENROUTER_API_KEY:-${OPENAI_API_KEY:-}}}"
   BASE_URL="${BASE_URL:-https://openrouter.ai/api/v1}"
 fi
-MODEL="${1:-"gpt-5.2-chat-latest"}"
+MODEL="${1:-"gpt-5.5"}"
 CONCURRENCY="${2:-${CONCURRENCY:-16}}"
 
 if [[ -z "${API_KEY}" ]]; then
