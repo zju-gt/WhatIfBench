@@ -41,7 +41,7 @@ PARSER_EXTRA_BODY = {
     "reasoning": {"effort": "none", "exclude": True},
     "thinking": {"type": "disabled"},
 }
-PARSER_MAX_TOKENS = 4096
+PARSER_MAX_TOKENS = 16384
 
 
 def build_parser_messages(answer: str) -> list[dict[str, str]]:

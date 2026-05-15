@@ -33,7 +33,7 @@ python3 "${ROOT_DIR}/code/src/main.py" \
   --api-key "${API_KEY}" \
   --base-url "${BASE_URL}" \
   --api-source "${API_SOURCE}" \
-  --dataset "/data/oss_bucket_0/wyc/EMNLP/benchmark_candidates_v1_0422_split.json" \
+  --dataset "/home/gaotu.wyc/project/EMNLP26/mvp/data/benchmark_candidates_v2_0514.json" \
   --model "${MODEL}" \
   --output-dir "result" \
   --concurrency "${CONCURRENCY}"
