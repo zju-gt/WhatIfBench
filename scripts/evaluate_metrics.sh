@@ -36,7 +36,7 @@ python3 "${ROOT_DIR}/code/src/main.py" \
   --api-key "${API_KEY}" \
   --base-url "${BASE_URL}" \
   --api-source "${API_SOURCE}" \
-  --benchmark "data/benchmark_candidates_with_rubrics.json" \
+  --benchmark "data/benchmark_candidates_with_rubrics_10.json" \
   --answers "${ANSWERS_FILE}" \
   --judge-model "${JUDGE_MODEL}" \
   --parser-model "${PARSER_MODEL}" \
