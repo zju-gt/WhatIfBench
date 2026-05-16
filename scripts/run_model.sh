@@ -11,7 +11,7 @@ else
   API_KEY="${API_KEY:-${OPENROUTER_API_KEY:-${OPENAI_API_KEY:-}}}"
   BASE_URL="${BASE_URL:-https://openrouter.ai/api/v1}"
 fi
-MODEL="${1:-"gpt-5.5"}"
+MODEL="${1:-"gpt-5.4-2026-03-05"}"
 CONCURRENCY="${2:-${CONCURRENCY:-16}}"
 
 if [[ -z "${API_KEY}" ]]; then
@@ -33,7 +33,7 @@ python3 "${ROOT_DIR}/code/src/main.py" \
   --api-key "${API_KEY}" \
   --base-url "${BASE_URL}" \
   --api-source "${API_SOURCE}" \
-  --dataset "/home/gaotu.wyc/project/EMNLP26/mvp/data/benchmark_candidates_v2_0514_20.json" \
+  --dataset "/home/gaotu.wyc/project/EMNLP26/mvp/data/benchmark_candidates_v2_0514.json" \
   --model "${MODEL}" \
   --output-dir "result" \
   --concurrency "${CONCURRENCY}"

@@ -1,0 +1,1 @@
+bash scripts/evaluate_metrics.sh /home/gaotu.wyc/project/EMNLP26/code/result/gpt-5.5.json
