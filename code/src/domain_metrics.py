@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Any
 
 
-BUCKETS = ("STEM", "Hybrid", "HASS")
+BUCKETS = ("STEM", "HASS", "Hybrid")
 
 
 def _coerce_float(value: Any) -> float | None:

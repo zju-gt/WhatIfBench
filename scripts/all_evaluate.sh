@@ -1,1 +1,2 @@
-bash scripts/evaluate_metrics.sh /home/gaotu.wyc/project/EMNLP26/code/result/gpt-5.5.json
+# bash scripts/evaluate_metrics.sh /home/gaotu.wyc/project/EMNLP26/code/result/claude-opus-4-7.json
+python ./code/src/domain_metrics.py /home/gaotu.wyc/project/EMNLP26/code/result/success/claude-opus-4-7_metrics_gpt-5.4-2026-03-05.json
